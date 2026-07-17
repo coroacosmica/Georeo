@@ -11,7 +11,7 @@ export default function StandardLabels() {
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+  }, []);
 
   const handleAddToCart = (label: any) => {
     addItem({
