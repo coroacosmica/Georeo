@@ -1,10 +1,15 @@
+import { useEffect } from 'react';
 import { useAdminStore } from '../store/useAdminStore';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Download } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 export default function OrdersPage() {
-  const { orders, updateOrderStatus, deleteOrder } = useAdminStore();
+  const { orders, updateOrderStatus, deleteOrder, fetchOrders } = useAdminStore();
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   const exportToExcel = () => {
     const data = orders.map(order => ({

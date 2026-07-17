@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { CartItem } from './useCartStore';
+import { ALL_LABELS } from '../data/labels';
+import { supabase } from '../lib/supabase';
 
 export interface OrderCustomer {
   fullName: string;
@@ -30,11 +32,13 @@ export interface AdminProduct {
 
 interface AdminStore {
   orders: AdminOrder[];
+  fetchOrders: () => Promise<void>;
   addOrder: (order: Omit<AdminOrder, 'id' | 'status' | 'date'>) => void;
   updateOrderStatus: (id: string, status: AdminOrder['status']) => void;
   deleteOrder: (id: string) => void;
   
   products: AdminProduct[];
+  fetchProducts: () => Promise<void>;
   addProduct: (product: Omit<AdminProduct, 'id'>) => void;
   updateProduct: (id: string, updates: Partial<AdminProduct>) => void;
   deleteProduct: (id: string) => void;
@@ -49,11 +53,22 @@ export const useAdminStore = create<AdminStore>()(
     (set) => ({
       orders: [],
 
-      addOrder: (orderData) => set((state) => {
-        // Generate a random ID like ORD-1234
-        const newId = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
-        const date = new Date().toLocaleString();
+      fetchOrders: async () => {
+        if (supabase) {
+          try {
+            const { data, error } = await supabase.from('orders').select('*').order('date', { ascending: false });
+            if (!error && data) {
+              set({ orders: data });
+            }
+          } catch (e) {
+            console.error('Failed to fetch orders from Supabase', e);
+          }
+        }
+      },
 
+      addOrder: async (orderData) => {
+        const newId = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
+        const date = new Date().toISOString();
         const newOrder: AdminOrder = {
           ...orderData,
           id: newId,
@@ -61,42 +76,113 @@ export const useAdminStore = create<AdminStore>()(
           date
         };
 
-        return { orders: [newOrder, ...state.orders] };
-      }),
+        if (supabase) {
+          try {
+            await supabase.from('orders').insert([newOrder]);
+          } catch (e) {
+            console.error('Supabase error', e);
+          }
+        }
 
-      updateOrderStatus: (id, status) => set((state) => ({
-        orders: state.orders.map(order => 
-          order.id === id ? { ...order, status } : order
-        )
+        set((state) => ({ orders: [newOrder, ...state.orders] }));
+      },
+
+      updateOrderStatus: async (id, status) => {
+        if (supabase) {
+          try {
+            await supabase.from('orders').update({ status }).eq('id', id);
+          } catch (e) {
+            console.error('Supabase error', e);
+          }
+        }
+        set((state) => ({
+          orders: state.orders.map(order => 
+            order.id === id ? { ...order, status } : order
+          )
+        }));
+      },
+
+      deleteOrder: async (id) => {
+        if (supabase) {
+          try {
+            await supabase.from('orders').delete().eq('id', id);
+          } catch (e) {
+            console.error('Supabase error', e);
+          }
+        }
+        set((state) => ({
+          orders: state.orders.filter(order => order.id !== id)
+        }));
+      },
+
+      products: ALL_LABELS.map(label => ({
+        id: `std-${label.id}`,
+        name: label.name,
+        price: 50,
+        url: label.url,
+        type: 'label'
       })),
 
-      deleteOrder: (id) => set((state) => ({
-        orders: state.orders.filter(order => order.id !== id)
-      })),
-
-      products: [],
+      fetchProducts: async () => {
+        if (supabase) {
+          try {
+            const { data, error } = await supabase.from('products').select('*');
+            if (!error && data && data.length > 0) {
+              set({ products: data });
+            }
+          } catch (e) {
+            console.error('Failed to fetch products from Supabase', e);
+          }
+        }
+      },
       
-      addProduct: (product) => set((state) => {
+      addProduct: async (product) => {
         const newProduct = {
           ...product,
           id: `PROD-${Date.now()}`
         };
-        return { products: [newProduct, ...state.products] };
-      }),
 
-      updateProduct: (id, updates) => set((state) => ({
-        products: state.products.map(p => 
-          p.id === id ? { ...p, ...updates } : p
-        )
-      })),
+        if (supabase) {
+          try {
+            await supabase.from('products').insert([newProduct]);
+          } catch (e) {
+            console.error('Supabase error', e);
+          }
+        }
 
-      deleteProduct: (id) => set((state) => ({
-        products: state.products.filter(p => p.id !== id)
-      })),
+        set((state) => ({ products: [newProduct, ...state.products] }));
+      },
+
+      updateProduct: async (id, updates) => {
+        if (supabase) {
+          try {
+            await supabase.from('products').update(updates).eq('id', id);
+          } catch (e) {
+            console.error('Supabase error', e);
+          }
+        }
+        set((state) => ({
+          products: state.products.map(p => 
+            p.id === id ? { ...p, ...updates } : p
+          )
+        }));
+      },
+
+      deleteProduct: async (id) => {
+        if (supabase) {
+          try {
+            await supabase.from('products').delete().eq('id', id);
+          } catch (e) {
+            console.error('Supabase error', e);
+          }
+        }
+        set((state) => ({
+          products: state.products.filter(p => p.id !== id)
+        }));
+      },
 
       isAuthenticated: false,
       login: (password) => {
-        // Hardcoded password for now: "georeo2026"
         if (password === 'georeo2026') {
           set({ isAuthenticated: true });
           return true;
@@ -107,7 +193,7 @@ export const useAdminStore = create<AdminStore>()(
 
     }),
     {
-      name: 'georeo-admin-storage', // key in local storage
+      name: 'georeo-admin-storage',
     }
   )
 );

@@ -1,22 +1,16 @@
 import { useState, useEffect } from 'react';
-import { ALL_LABELS } from '../data/labels';
 import { Package, Edit2, Trash2, Plus } from 'lucide-react';
 import { useAdminStore } from '../store/useAdminStore';
 
 export default function ProductsPage() {
-  const { products, addProduct, updateProduct, deleteProduct } = useAdminStore();
+  const { products, addProduct, updateProduct, deleteProduct, fetchProducts } = useAdminStore();
   const [isEditing, setIsEditing] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ name: '', price: 0, url: '' });
   const [isAdding, setIsAdding] = useState(false);
 
-  // Initialize products from ALL_LABELS if empty
   useEffect(() => {
-    if (products.length === 0) {
-      ALL_LABELS.forEach(label => {
-        addProduct({ name: label.name, price: 50, url: label.url, type: 'label' });
-      });
-    }
-  }, []);
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handleEdit = (product: any) => {
     setIsEditing(product.id);

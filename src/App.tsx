@@ -20,6 +20,8 @@ import OrdersPage from "./pages/OrdersPage";
 import ProductsPage from "./pages/ProductsPage";
 import SettingsPage from "./pages/SettingsPage";
 
+import { useAdminStore } from "./store/useAdminStore";
+
 function AnalyticsTracker() {
   const location = useLocation();
   const trackVisit = useAnalyticsStore(state => state.trackVisit);
@@ -32,6 +34,11 @@ function AnalyticsTracker() {
 }
 
 function MainApp() {
+  const { fetchProducts } = useAdminStore();
+  
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
   return (
     <div className="bg-safety-dark min-h-screen text-safety-light selection:bg-safety-orange selection:text-white">
       <Toaster position="bottom-center" theme="dark" toastOptions={{ style: { background: '#111', border: '1px solid #FF5A00', color: '#fff' } }} />

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useState, useRef, type MouseEvent } from "react";
 import { useCartStore } from '../store/useCartStore';
+import { useAdminStore, type AdminProduct } from '../store/useAdminStore';
 import { toast } from "sonner";
-import { ALL_LABELS } from '../data/labels';
 
 const PRODUCTS = [
   { id: 1, title: "Standard Site Safety", size: "1200x900mm", price: "0 EGP", modelUrl: "/models/site_safety_board_3d_with_upload.html" },
@@ -15,11 +15,12 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [isCustomizing, setIsCustomizing] = useState(false);
-  const [selectedLabel, setSelectedLabel] = useState<typeof ALL_LABELS[0] | null>(null);
+  const [selectedLabel, setSelectedLabel] = useState<AdminProduct | null>(null);
   const [customNote, setCustomNote] = useState("");
   const { addItem } = useCartStore();
+  const { products } = useAdminStore();
 
-  const applyTexture = (label: typeof ALL_LABELS[0]) => {
+  const applyTexture = (label: AdminProduct) => {
     setSelectedLabel(label);
     if (iframeRef.current && iframeRef.current.contentWindow) {
       iframeRef.current.contentWindow.postMessage({ type: 'SET_TEXTURE', url: label.url }, '*');
@@ -164,13 +165,13 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
           className="absolute top-[105%] left-0 w-full bg-safety-panel border border-safety-gray rounded-xl p-4 z-50 shadow-2xl"
         >
           <div className="flex justify-between items-center mb-3">
-            <h4 className="font-safetyMono text-sm text-white">Select Label Design ({ALL_LABELS.length} Available)</h4>
+            <h4 className="font-safetyMono text-sm text-white">Select Label Design ({products.length} Available)</h4>
             <button onClick={resetTexture} className="text-xs font-safetyMono text-safety-light/60 hover:text-white transition-colors cursor-pointer">
               [ Reset ]
             </button>
           </div>
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-            {ALL_LABELS.map(label => (
+            {products.map(label => (
               <button 
                 key={label.id}
                 onClick={() => applyTexture(label)}

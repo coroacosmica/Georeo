@@ -1,14 +1,19 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCartStore } from '../store/useCartStore';
-import { ALL_LABELS } from '../data/labels';
+import { useAdminStore } from '../store/useAdminStore';
 import { toast } from "sonner";
 
 export default function StandardLabels() {
   const { addItem } = useCartStore();
+  const { products, fetchProducts } = useAdminStore();
   const [visibleCount, setVisibleCount] = useState(12);
 
-  const handleAddToCart = (label: typeof ALL_LABELS[0]) => {
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const handleAddToCart = (label: any) => {
     addItem({
       id: `std-${label.id}-${Date.now()}`,
       name: label.name,
@@ -21,10 +26,10 @@ export default function StandardLabels() {
   };
 
   const handleLoadMore = () => {
-    setVisibleCount(prev => Math.min(prev + 12, ALL_LABELS.length));
+    setVisibleCount(prev => Math.min(prev + 12, products.length));
   };
 
-  const visibleLabels = ALL_LABELS.slice(0, visibleCount);
+  const visibleLabels = products.slice(0, visibleCount);
 
   return (
     <section className="py-24 bg-safety-dark border-t border-safety-gray/30">
@@ -76,13 +81,13 @@ export default function StandardLabels() {
           ))}
         </div>
 
-        {visibleCount < ALL_LABELS.length && (
+        {visibleCount < products.length && (
           <div className="mt-12 text-center">
             <button 
               onClick={handleLoadMore}
               className="px-8 py-3 border-2 border-safety-orange text-safety-orange font-bold uppercase tracking-widest text-sm rounded hover:bg-safety-orange hover:text-safety-dark transition-colors cursor-pointer"
             >
-              Load More ({ALL_LABELS.length - visibleCount} remaining)
+              Load More ({products.length - visibleCount} remaining)
             </button>
           </div>
         )}
