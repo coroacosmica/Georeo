@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, X, Plus, Minus, Trash2 } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
+import { useTranslation } from '../lib/i18n/translations';
 
 export default function CartDrawer() {
   const { items, isOpen, toggleCart, updateQuantity, removeItem, getTotalPrice, toggleCheckout } = useCartStore();
+  const { t } = useTranslation();
 
   return (
     <AnimatePresence>
@@ -30,7 +32,7 @@ export default function CartDrawer() {
             <div className="flex items-center justify-between p-6 border-b border-safety-gray/50">
               <div className="flex items-center gap-3">
                 <ShoppingCart className="text-safety-orange w-6 h-6" />
-                <h2 className="font-safetyDisplay text-2xl text-white uppercase">Your Cart</h2>
+                <h2 className="font-safetyDisplay text-2xl text-white uppercase">{t('cart.title')}</h2>
               </div>
               <button onClick={toggleCart} className="text-safety-light/60 hover:text-white transition-colors cursor-pointer">
                 <X className="w-6 h-6" />
@@ -42,7 +44,7 @@ export default function CartDrawer() {
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center opacity-50">
                   <ShoppingCart className="w-16 h-16 mb-4 text-safety-light/20" />
-                  <p className="font-safetySans text-safety-light">Your cart is empty.</p>
+                  <p className="font-safetySans text-safety-light">{t('cart.empty')}</p>
                 </div>
               ) : (
                 items.map((item) => (
@@ -53,9 +55,9 @@ export default function CartDrawer() {
                     
                     <div className="flex flex-col flex-1">
                       <h3 className="font-safetyDisplay text-lg text-white leading-tight mb-1">{item.name}</h3>
-                      {item.size && <p className="font-safetyMono text-xs text-safety-orange mb-2">Size: {item.size}</p>}
+                      {item.size && <p className="font-safetyMono text-xs text-safety-orange mb-2">{t('cart.size')}: {item.size}</p>}
                       <div className="font-safetyMono text-sm text-safety-light/70 mb-auto">
-                        ${item.price.toFixed(2)}
+                        {item.price.toFixed(2)} {t('common.egp')}
                       </div>
                       
                       <div className="flex items-center justify-between mt-3">
@@ -82,14 +84,14 @@ export default function CartDrawer() {
             {items.length > 0 && (
               <div className="p-6 border-t border-safety-gray/50 bg-safety-panel">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="font-safetySans text-safety-light">Total Estimated Cost</span>
-                  <span className="font-safetyMono text-2xl text-safety-orange">${getTotalPrice().toFixed(2)}</span>
+                  <span className="font-safetySans text-safety-light">{t('cart.total')}</span>
+                  <span className="font-safetyMono text-2xl text-safety-orange">{getTotalPrice().toFixed(2)} {t('common.egp')}</span>
                 </div>
                 <button 
                   onClick={toggleCheckout}
                   className="w-full py-4 bg-safety-orange text-safety-dark font-bold hover:bg-yellow-500 transition-colors uppercase tracking-widest text-sm rounded shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  Proceed to Checkout
+                  {t('cart.checkout')}
                 </button>
               </div>
             )}

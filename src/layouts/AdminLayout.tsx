@@ -1,22 +1,27 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Settings, LogOut, Globe } from 'lucide-react';
 import { useAdminStore } from '../store/useAdminStore';
 import AdminLogin from '../pages/AdminLogin';
+import { useTranslation } from '../lib/i18n/translations';
+import { useLanguageStore } from '../store/useLanguageStore';
 
 export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAdminStore();
 
+  const { t } = useTranslation();
+  const toggleLanguage = useLanguageStore((state) => state.toggleLanguage);
+
   if (!isAuthenticated) {
     return <AdminLogin />;
   }
 
   const links = [
-    { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-    { name: 'Orders', path: '/admin/orders', icon: ShoppingCart },
-    { name: 'Products', path: '/admin/products', icon: Package },
-    { name: 'Settings', path: '/admin/settings', icon: Settings },
+    { name: t('admin.dashboard'), path: '/admin', icon: LayoutDashboard },
+    { name: t('admin.orders'), path: '/admin/orders', icon: ShoppingCart },
+    { name: t('admin.products'), path: '/admin/products', icon: Package },
+    { name: t('admin.settings'), path: '/admin/settings', icon: Settings },
   ];
 
   const handleLogout = (e: React.MouseEvent) => {
@@ -41,7 +46,7 @@ export default function AdminLayout() {
             const isActive = location.pathname === link.path;
             return (
               <Link
-                key={link.name}
+                key={link.path}
                 to={link.path}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive 
@@ -56,10 +61,14 @@ export default function AdminLayout() {
           })}
         </nav>
 
-        <div className="p-4 border-t border-safety-gray/30">
+        <div className="p-4 border-t border-safety-gray/30 space-y-2">
+          <button onClick={toggleLanguage} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-safety-light hover:bg-white/5 hover:text-white transition-colors cursor-pointer">
+            <Globe className="w-5 h-5" />
+            {t('nav.language')}
+          </button>
           <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer">
             <LogOut className="w-5 h-5" />
-            Exit & Logout
+            {t('admin.logout')}
           </button>
         </div>
       </aside>

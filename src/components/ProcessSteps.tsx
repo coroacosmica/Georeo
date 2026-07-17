@@ -1,34 +1,37 @@
 import { motion } from "framer-motion";
 import { BookOpen, MessageCircle, CheckCircle2, Package } from 'lucide-react';
-
-const STEPS = [
-  { 
-    id: 1,
-    title: "Browse", 
-    desc: "Explore our products",
-    icon: BookOpen
-  },
-  { 
-    id: 2,
-    title: "Contact", 
-    desc: "Reach us on WhatsApp",
-    icon: MessageCircle
-  },
-  { 
-    id: 3,
-    title: "Approve", 
-    desc: "Review your sample",
-    icon: CheckCircle2
-  },
-  { 
-    id: 4,
-    title: "Receive", 
-    desc: "Get your custom order",
-    icon: Package
-  }
-];
+import { useTranslation } from '../lib/i18n/translations';
 
 export default function ProcessSteps() {
+  const { t } = useTranslation();
+  
+  const STEPS = [
+    { 
+      id: 1,
+      title: t('process.s1'), 
+      desc: t('process.s1d'),
+      icon: BookOpen
+    },
+    { 
+      id: 2,
+      title: t('process.s2'), 
+      desc: t('process.s2d'),
+      icon: MessageCircle
+    },
+    { 
+      id: 3,
+      title: t('process.s3'), 
+      desc: t('process.s3d'),
+      icon: CheckCircle2
+    },
+    { 
+      id: 4,
+      title: t('process.s4'), 
+      desc: t('process.s4d'),
+      icon: Package
+    }
+  ];
+
   return (
     <section id="process" className="py-20 bg-safety-dark border-y border-safety-gray/30">
       <div className="container mx-auto px-6">
@@ -39,7 +42,7 @@ export default function ProcessSteps() {
             viewport={{ once: true }}
             className="font-safetyDisplay text-4xl md:text-5xl text-white uppercase"
           >
-            How it works
+            {t('process.title')}
           </motion.h2>
         </div>
         

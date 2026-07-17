@@ -3,6 +3,7 @@ import { useState, useRef, type MouseEvent } from "react";
 import { useCartStore } from '../store/useCartStore';
 import { useAdminStore, type AdminProduct } from '../store/useAdminStore';
 import { toast } from "sonner";
+import { useTranslation } from '../lib/i18n/translations';
 
 const PRODUCTS = [
   { id: 1, title: "Standard Site Safety", size: "1200x900mm", price: "0 EGP", modelUrl: "/models/site_safety_board_3d_with_upload.html" },
@@ -19,6 +20,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
   const [customNote, setCustomNote] = useState("");
   const { addItem } = useCartStore();
   const { products } = useAdminStore();
+  const { t, language } = useTranslation();
 
   const applyTexture = (label: AdminProduct) => {
     setSelectedLabel(label);
@@ -114,34 +116,34 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
           {/* Content */}
           <div className="absolute bottom-0 left-0 p-6 w-full pointer-events-none flex flex-col justify-end" style={{ transform: "translateZ(30px)" }}>
             <div className="flex justify-between items-end mb-2">
-              <div className="font-safetyMono text-safety-orange text-xs">SPEC: {product.size}</div>
+              <div className="font-safetyMono text-safety-orange text-xs">{t('sign.spec')}: {product.size}</div>
               {product.price && (
-                <div className="font-safetyMono text-white/70 text-[10px] uppercase text-right max-w-[140px] leading-tight">
-                  Price: <span className="text-safety-orange text-sm">{product.price}</span>
-                  <div className="text-[8px] text-safety-light/50 mt-0.5">Order confirmation via Call/WhatsApp</div>
+                <div className={`font-safetyMono text-white/70 text-[10px] uppercase max-w-[140px] leading-tight ${language === 'ar' ? 'text-left' : 'text-right'}`}>
+                  {t('sign.price')}: <span className="text-safety-orange text-sm">{product.price}</span>
+                  <div className="text-[8px] text-safety-light/50 mt-0.5">{t('sign.orderConfirm')}</div>
                 </div>
               )}
             </div>
             <h3 className="font-safetyDisplay text-3xl uppercase text-white leading-none">{product.title}</h3>
             {product.modelUrl && (
-              <div className="mt-3 flex items-center gap-3 pointer-events-auto">
+              <div className="mt-3 flex flex-wrap items-center gap-3 pointer-events-auto">
                 <div className="inline-flex items-center text-xs font-safetyMono text-safety-orange bg-safety-orange/10 px-2 py-1 rounded border border-safety-orange/30">
-                  <svg className="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                  3D Interactive
+                  <svg className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  {t('sign.3d')}
                 </div>
                 <button 
                   onClick={() => setIsCustomizing(!isCustomizing)}
                   className="inline-flex items-center text-xs font-safetyMono text-safety-dark bg-safety-orange px-3 py-1 rounded hover:bg-yellow-500 transition-colors cursor-pointer"
                 >
-                  <svg className="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
-                  Customize
+                  <svg className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+                  {t('sign.customize')}
                 </button>
                 <button 
                   onClick={handleAddToCart}
                   className="inline-flex items-center text-xs font-safetyMono text-white bg-safety-dark px-3 py-1 rounded hover:bg-black transition-colors cursor-pointer border border-safety-gray/50"
                 >
-                  <svg className="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                  Add to Cart
+                  <svg className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  {t('labels.addToCart')}
                 </button>
               </div>
             )}
@@ -165,9 +167,9 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
           className="absolute top-[105%] left-0 w-full bg-safety-panel border border-safety-gray rounded-xl p-4 z-50 shadow-2xl"
         >
           <div className="flex justify-between items-center mb-3">
-            <h4 className="font-safetyMono text-sm text-white">Select Label Design ({products.length} Available)</h4>
+            <h4 className="font-safetyMono text-sm text-white">{t('sign.selectLabel')} ({products.length} {t('sign.available')})</h4>
             <button onClick={resetTexture} className="text-xs font-safetyMono text-safety-light/60 hover:text-white transition-colors cursor-pointer">
-              [ Reset ]
+              {t('sign.reset')}
             </button>
           </div>
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
@@ -184,11 +186,11 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
           </div>
           
           <div className="border-t border-safety-gray/50 pt-3">
-            <label className="block font-safetyMono text-xs text-safety-light/70 uppercase mb-2">Custom Notes / Design Requirements</label>
+            <label className="block font-safetyMono text-xs text-safety-light/70 uppercase mb-2">{t('sign.customNotes')}</label>
             <textarea 
               value={customNote}
               onChange={(e) => setCustomNote(e.target.value)}
-              placeholder="e.g. Please add our logo to the top right corner..."
+              placeholder={t('sign.notesPlaceholder')}
               className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white focus:outline-none focus:border-safety-orange transition-colors text-sm resize-none"
               rows={2}
             />
@@ -200,6 +202,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
 }
 
 export default function ProductGrid() {
+  const { t } = useTranslation();
   return (
     <section id="products" className="py-24 bg-safety-dark">
       <div className="container mx-auto px-6">
@@ -210,9 +213,9 @@ export default function ProductGrid() {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <h2 className="font-safetyDisplay text-5xl md:text-7xl text-white uppercase">Engineered <span className="text-safety-gray">Signage</span></h2>
+          <h2 className="font-safetyDisplay text-5xl md:text-7xl text-white uppercase">{t('sign.title1')} <span className="text-safety-gray">{t('sign.title2')}</span></h2>
           <p className="text-safety-light/70 font-safetySans mt-4 max-w-2xl mx-auto">
-            Heavy-duty PVC and acrylic panels coated with weather-resistant finishes. Designed to endure harsh industrial environments.
+            {t('sign.desc')}
           </p>
         </motion.div>
 

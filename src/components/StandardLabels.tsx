@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import { useCartStore } from '../store/useCartStore';
 import { useAdminStore } from '../store/useAdminStore';
 import { toast } from "sonner";
+import { useTranslation } from '../lib/i18n/translations';
 
 export default function StandardLabels() {
+  const { t } = useTranslation();
   const { addItem } = useCartStore();
   const { products, fetchProducts } = useAdminStore();
   const [visibleCount, setVisibleCount] = useState(12);
@@ -41,9 +43,9 @@ export default function StandardLabels() {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <h2 className="font-safetyDisplay text-4xl md:text-5xl text-white uppercase">Standard <span className="text-safety-orange">Labels</span></h2>
+          <h2 className="font-safetyDisplay text-4xl md:text-5xl text-white uppercase">{t('labels.title1')} <span className="text-safety-orange">{t('labels.title2')}</span></h2>
           <p className="text-safety-light/70 font-safetySans mt-4 max-w-2xl mx-auto">
-            High-contrast, durable adhesive labels for quick compliance and safety marking across your facility.
+            {t('labels.desc')}
           </p>
         </motion.div>
 
@@ -64,13 +66,13 @@ export default function StandardLabels() {
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2">
-                  <div className="text-white font-safetyMono font-bold text-lg">{label.price} EGP</div>
-                  <div className="text-[9px] text-center px-4 text-safety-light/70 mb-2 leading-tight">Order confirmation via WhatsApp required</div>
+                  <div className="text-white font-safetyMono font-bold text-lg">{label.price} {t('common.egp')}</div>
+                  <div className="text-[9px] text-center px-4 text-safety-light/70 mb-2 leading-tight">{t('labels.orderConfirm')}</div>
                   <button 
                     onClick={() => handleAddToCart(label)}
                     className="px-6 py-2 bg-safety-orange text-safety-dark font-bold text-sm uppercase rounded shadow-lg hover:bg-yellow-500 transition-colors cursor-pointer"
                   >
-                    Add to Cart
+                    {t('labels.addToCart')}
                   </button>
                 </div>
               </div>
@@ -87,7 +89,7 @@ export default function StandardLabels() {
               onClick={handleLoadMore}
               className="px-8 py-3 border-2 border-safety-orange text-safety-orange font-bold uppercase tracking-widest text-sm rounded hover:bg-safety-orange hover:text-safety-dark transition-colors cursor-pointer"
             >
-              Load More ({products.length - visibleCount} remaining)
+              {t('labels.loadMore')} ({products.length - visibleCount} {t('labels.remaining')})
             </button>
           </div>
         )}

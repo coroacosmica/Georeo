@@ -1,4 +1,7 @@
+import { useTranslation } from '../lib/i18n/translations';
+
 export default function SafetyFooter() {
+  const { t } = useTranslation();
   return (
     <footer className="bg-safety-panel pt-20 pb-10 border-t border-safety-gray/20">
       <div className="container mx-auto px-6">
@@ -11,22 +14,19 @@ export default function SafetyFooter() {
               </div>
             </a>
             <p className="text-safety-light/50 font-safetySans text-sm max-w-xs text-center md:text-left">
-              Industrial grade safety signage engineered for the harshest environments.
+              {t('footer.company')}
             </p>
           </div>
           
           <div className="flex gap-12">
             <div className="flex flex-col">
-              <h4 className="font-safetyDisplay text-xl uppercase text-white mb-4">Products</h4>
+              <h4 className="font-safetyDisplay text-xl uppercase text-white mb-4">{t('footer.products')}</h4>
               <ul className="flex flex-col gap-2 font-safetySans text-sm text-safety-light/60">
-                <li><a href="#" className="hover:text-safety-orange transition-colors">Safety Boards</a></li>
-                <li><a href="#" className="hover:text-safety-orange transition-colors">Hazard Warnings</a></li>
-                <li><a href="#" className="hover:text-safety-orange transition-colors">PPE Requirements</a></li>
-                <li><a href="#" className="hover:text-safety-orange transition-colors">Directional</a></li>
+                <li><a href="#products" className="hover:text-safety-orange transition-colors">{t('nav.products')}</a></li>
               </ul>
             </div>
             <div className="flex flex-col">
-              <h4 className="font-safetyDisplay text-xl uppercase text-white mb-4">Company</h4>
+              <h4 className="font-safetyDisplay text-xl uppercase text-white mb-4">{t('footer.contact')}</h4>
               <ul className="flex flex-col gap-2 font-safetySans text-sm text-safety-light/60">
                 <li><a href="#" className="hover:text-safety-orange transition-colors">Our Process</a></li>
                 <li><a href="#" className="hover:text-safety-orange transition-colors">Specs</a></li>
@@ -36,7 +36,7 @@ export default function SafetyFooter() {
         </div>
         
         <div className="pt-8 border-t border-safety-gray/30 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-safetyMono text-safety-light/40">
-          <div>&copy; {new Date().getFullYear()} Georeo Safety. All rights reserved.</div>
+          <div>&copy; {new Date().getFullYear()} Georeo. {t('footer.rights')}</div>
           <div className="flex gap-4">
             <a href="#" className="hover:text-safety-orange transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-safety-orange transition-colors">Terms of Service</a>

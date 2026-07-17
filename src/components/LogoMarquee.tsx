@@ -11,15 +11,18 @@ const PARTNER_LOGOS = [
   "/Labels/7ca63295819e925ff866d912cdc666fb.jpg"
 ];
 
+import { useTranslation } from '../lib/i18n/translations';
+
 // Duplicate the array to create a seamless infinite scroll effect
 const SCROLLING_LOGOS = [...PARTNER_LOGOS, ...PARTNER_LOGOS];
 
 export default function LogoMarquee() {
+  const { t } = useTranslation();
   return (
     <section className="py-12 bg-black border-y border-safety-gray/30 overflow-hidden">
       <div className="container mx-auto px-6 mb-8 text-center">
         <p className="font-safetyMono text-safety-light/50 text-sm tracking-widest uppercase">
-          Trusted By Industry Leaders
+          {t('logos.trusted')}
         </p>
       </div>
       

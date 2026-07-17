@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { useAdminStore } from '../store/useAdminStore';
-import { Lock, AlertCircle } from 'lucide-react';
+import { Lock, AlertCircle, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '../lib/i18n/translations';
+import { useLanguageStore } from '../store/useLanguageStore';
 
 export default function AdminLogin() {
+  const { t } = useTranslation();
+  const toggleLanguage = useLanguageStore(state => state.toggleLanguage);
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const { login } = useAdminStore();
@@ -29,17 +33,24 @@ export default function AdminLogin() {
       />
       
       <div className="bg-black/90 p-8 rounded-2xl border-2 border-safety-orange w-full max-w-md relative z-10 backdrop-blur-sm shadow-2xl">
+        <button 
+          onClick={toggleLanguage}
+          className="absolute top-4 right-4 text-safety-light/50 hover:text-white transition-colors cursor-pointer flex items-center gap-2 text-sm"
+        >
+          <Globe className="w-4 h-4" />
+        </button>
+
         <div className="flex flex-col items-center mb-8">
           <div className="w-16 h-16 bg-safety-orange/20 rounded-full flex items-center justify-center mb-4">
             <Lock className="w-8 h-8 text-safety-orange" />
           </div>
-          <h1 className="text-3xl font-safetyDisplay text-white uppercase tracking-wider">Admin Portal</h1>
-          <p className="text-safety-light/60 font-safetyMono text-sm mt-2">AUTHORIZED PERSONNEL ONLY</p>
+          <h1 className="text-3xl font-safetyDisplay text-white uppercase tracking-wider">{t('login.title')}</h1>
+          <p className="text-safety-light/60 font-safetyMono text-sm mt-2">{t('login.subtitle')}</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-safety-orange font-safetyMono text-sm mb-2">ACCESS CODE</label>
+            <label className="block text-safety-orange font-safetyMono text-sm mb-2 uppercase">{t('login.accessCode')}</label>
             <input 
               type="password" 
               value={password}
@@ -56,15 +67,15 @@ export default function AdminLogin() {
           {error && (
             <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 flex items-center gap-2 text-red-500 text-sm font-safetyMono">
               <AlertCircle className="w-4 h-4" />
-              <span>ACCESS DENIED</span>
+              <span>{t('login.error')}</span>
             </div>
           )}
 
           <button 
             type="submit"
-            className="w-full bg-safety-orange hover:bg-orange-600 text-black font-safetyDisplay text-xl uppercase py-4 rounded-lg transition-colors"
+            className="w-full bg-safety-orange hover:bg-orange-600 text-black font-safetyDisplay text-xl uppercase py-4 rounded-lg transition-colors cursor-pointer"
           >
-            Authenticate
+            {t('login.submit')}
           </button>
         </form>
       </div>

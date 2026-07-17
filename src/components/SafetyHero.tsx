@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useTranslation } from '../lib/i18n/translations';
 
 export default function SafetyHero() {
+  const { t } = useTranslation();
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-safety-dark">
       {/* Background industrial grid pattern */}
@@ -24,28 +26,28 @@ export default function SafetyHero() {
         >
           <div className="inline-block px-4 py-1.5 border border-safety-orange/30 bg-safety-orange/10 rounded-full w-max">
             <span className="font-safetyMono text-safety-orange text-xs tracking-widest uppercase">
-              Industrial Grade Signage
+              {t('hero.badge')}
             </span>
           </div>
           <h1 className="font-safetyDisplay text-6xl md:text-8xl lg:text-9xl text-white uppercase leading-[0.85] tracking-tight">
-            Smart <span className="text-safety-orange">Safety.</span><br />
-            Stronger<br /> Future.
+            {t('hero.title1')} <span className="text-safety-orange">{t('hero.title2')}</span><br />
+            {t('hero.title3')}
           </h1>
           <p className="text-safety-light/80 text-lg md:text-xl max-w-lg mt-4 font-safetySans font-light">
-            Engineered for extreme environments. Our safety signage combines high-visibility design with rugged durability to protect your most valuable assets.
+            {t('hero.desc')}
           </p>
           <div className="flex gap-4 mt-8">
             <button 
               onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-8 py-4 bg-white text-safety-dark font-bold hover:bg-gray-200 transition-colors uppercase tracking-wider text-sm cursor-pointer"
             >
-              Explore Products
+              {t('hero.cta1')}
             </button>
             <button 
               onClick={() => document.getElementById('specs')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-8 py-4 bg-transparent border border-safety-gray text-white hover:border-safety-orange transition-colors uppercase tracking-wider text-sm cursor-pointer"
             >
-              View Specs
+              {t('hero.cta2')}
             </button>
           </div>
         </motion.div>

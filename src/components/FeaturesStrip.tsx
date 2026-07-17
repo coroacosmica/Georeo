@@ -1,55 +1,69 @@
 import { motion } from "framer-motion";
-import { ShieldAlert, Globe2, Clock, CheckSquare } from "lucide-react";
-
-const FEATURES = [
-  {
-    icon: ShieldAlert,
-    title: "Weatherproof Build",
-    desc: "UV-resistant inks and durable PVC/acrylic withstand extreme heat, rain, and dust."
-  },
-  {
-    icon: Globe2,
-    title: "Bilingual Layout",
-    desc: "Clear English and Arabic formatting ensures critical information is understood by all."
-  },
-  {
-    icon: Clock,
-    title: "Fast Turnaround",
-    desc: "Rapid production cycle to get your site compliant without delaying operations."
-  },
-  {
-    icon: CheckSquare,
-    title: "Standards-Aligned",
-    desc: "Designs conform to local and international occupational health and safety regulations."
-  }
-];
+import { ShieldAlert, CheckCircle, Clock, Wrench } from "lucide-react";
+import { useTranslation } from '../lib/i18n/translations';
 
 export default function FeaturesStrip() {
+  const { t } = useTranslation();
+  
   return (
-    <section id="specs" className="py-20 bg-safety-panel border-y border-safety-gray/30">
+    <section id="features" className="py-20 bg-safety-dark border-t border-safety-gray/30">
       <div className="container mx-auto px-6">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-safety-gray/50">
-          {FEATURES.map((feature, i) => {
-            const Icon = feature.icon;
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                className={`flex flex-col items-center text-center px-4 ${i !== 0 ? 'pt-8 sm:pt-0' : ''}`}
-              >
-                <div className="w-16 h-16 rounded-full bg-safety-dark border border-safety-gray flex items-center justify-center mb-6 text-safety-orange group-hover:bg-safety-orange transition-colors">
-                  <Icon className="w-8 h-8" />
-                </div>
-                <h3 className="font-safetyDisplay text-2xl uppercase text-white mb-3">{feature.title}</h3>
-                <p className="font-safetySans text-safety-light/70 text-sm leading-relaxed">
-                  {feature.desc}
-                </p>
-              </motion.div>
-            );
-          })}
+        <h2 className="text-center font-safetyDisplay text-4xl text-white uppercase mb-12">{t('features.title')}</h2>
+        <div className="grid md:grid-cols-4 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center group"
+          >
+            <div className="w-16 h-16 mx-auto bg-safety-panel border border-safety-gray rounded-xl flex items-center justify-center mb-6 group-hover:border-safety-orange transition-colors">
+              <ShieldAlert className="w-8 h-8 text-safety-orange" />
+            </div>
+            <h3 className="font-safetyMono text-lg text-white mb-2 uppercase">{t('features.f1')}</h3>
+            <p className="text-safety-light/70 font-safetySans text-sm">{t('features.f1d')}</p>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-center group"
+          >
+            <div className="w-16 h-16 mx-auto bg-safety-panel border border-safety-gray rounded-xl flex items-center justify-center mb-6 group-hover:border-safety-orange transition-colors">
+              <CheckCircle className="w-8 h-8 text-safety-orange" />
+            </div>
+            <h3 className="font-safetyMono text-lg text-white mb-2 uppercase">{t('features.f2')}</h3>
+            <p className="text-safety-light/70 font-safetySans text-sm">{t('features.f2d')}</p>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-center group"
+          >
+            <div className="w-16 h-16 mx-auto bg-safety-panel border border-safety-gray rounded-xl flex items-center justify-center mb-6 group-hover:border-safety-orange transition-colors">
+              <Clock className="w-8 h-8 text-safety-orange" />
+            </div>
+            <h3 className="font-safetyMono text-lg text-white mb-2 uppercase">{t('features.f3')}</h3>
+            <p className="text-safety-light/70 font-safetySans text-sm">{t('features.f3d')}</p>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="text-center group"
+          >
+            <div className="w-16 h-16 mx-auto bg-safety-panel border border-safety-gray rounded-xl flex items-center justify-center mb-6 group-hover:border-safety-orange transition-colors">
+              <Wrench className="w-8 h-8 text-safety-orange" />
+            </div>
+            <h3 className="font-safetyMono text-lg text-white mb-2 uppercase">{t('features.f4')}</h3>
+            <p className="text-safety-light/70 font-safetySans text-sm">{t('features.f4d')}</p>
+          </motion.div>
         </div>
       </div>
     </section>

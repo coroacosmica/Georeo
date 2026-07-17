@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useTranslation } from '../lib/i18n/translations';
 
 export default function CtaBand() {
+  const { t } = useTranslation();
   return (
     <section className="relative py-24 bg-safety-orange overflow-hidden">
       {/* Hazard stripe background texture */}
@@ -19,14 +21,14 @@ export default function CtaBand() {
           transition={{ duration: 0.5 }}
           className="max-w-3xl mx-auto"
         >
-          <h2 className="font-safetyDisplay text-5xl md:text-7xl text-safety-dark uppercase mb-6 leading-tight">
-            Ready to Secure<br />Your Site?
+          <h2 className="font-safetyDisplay text-5xl md:text-7xl text-safety-dark uppercase mb-6 leading-tight whitespace-pre-line">
+            {t('cta.title')}
           </h2>
           <p className="font-safetySans text-safety-dark/80 text-lg md:text-xl font-medium mb-10 max-w-xl mx-auto">
-            Contact our safety engineers today for a custom quote on heavy-duty industrial signage.
+            {t('cta.desc')}
           </p>
           <a href="mailto:sales@georeo.com" className="inline-block px-10 py-5 bg-safety-dark text-white font-bold hover:bg-black transition-colors uppercase tracking-widest text-sm shadow-xl shadow-safety-dark/20 hover:scale-105 transform duration-300">
-            Request Custom Quote
+            {t('cta.btn')}
           </a>
         </motion.div>
       </div>
