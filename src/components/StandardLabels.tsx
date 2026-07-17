@@ -64,7 +64,7 @@ export default function StandardLabels() {
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2">
-                  <div className="text-white font-safetyMono font-bold text-lg">0 EGP</div>
+                  <div className="text-white font-safetyMono font-bold text-lg">{label.price} EGP</div>
                   <div className="text-[9px] text-center px-4 text-safety-light/70 mb-2 leading-tight">Order confirmation via WhatsApp required</div>
                   <button 
                     onClick={() => handleAddToCart(label)}
