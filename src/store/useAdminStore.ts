@@ -20,11 +20,24 @@ export interface AdminOrder {
   date: string;
 }
 
+export interface AdminProduct {
+  id: string;
+  name: string;
+  price: number;
+  url: string;
+  type?: string;
+}
+
 interface AdminStore {
   orders: AdminOrder[];
   addOrder: (order: Omit<AdminOrder, 'id' | 'status' | 'date'>) => void;
   updateOrderStatus: (id: string, status: AdminOrder['status']) => void;
   deleteOrder: (id: string) => void;
+  
+  products: AdminProduct[];
+  addProduct: (product: Omit<AdminProduct, 'id'>) => void;
+  updateProduct: (id: string, updates: Partial<AdminProduct>) => void;
+  deleteProduct: (id: string) => void;
 }
 
 export const useAdminStore = create<AdminStore>()(
@@ -55,6 +68,26 @@ export const useAdminStore = create<AdminStore>()(
 
       deleteOrder: (id) => set((state) => ({
         orders: state.orders.filter(order => order.id !== id)
+      })),
+
+      products: [],
+      
+      addProduct: (product) => set((state) => {
+        const newProduct = {
+          ...product,
+          id: `PROD-${Date.now()}`
+        };
+        return { products: [newProduct, ...state.products] };
+      }),
+
+      updateProduct: (id, updates) => set((state) => ({
+        products: state.products.map(p => 
+          p.id === id ? { ...p, ...updates } : p
+        )
+      })),
+
+      deleteProduct: (id) => set((state) => ({
+        products: state.products.filter(p => p.id !== id)
       })),
 
     }),

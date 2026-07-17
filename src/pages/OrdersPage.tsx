@@ -1,18 +1,49 @@
 import { useAdminStore } from '../store/useAdminStore';
 import { motion } from 'framer-motion';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Download } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 export default function OrdersPage() {
   const { orders, updateOrderStatus, deleteOrder } = useAdminStore();
+
+  const exportToExcel = () => {
+    const data = orders.map(order => ({
+      'Order ID': order.id,
+      'Date': order.date,
+      'Status': order.status,
+      'Customer Name': order.customer.fullName,
+      'Company': order.customer.company,
+      'Phone': order.customer.phone,
+      'Email': order.customer.email,
+      'Address': order.customer.address,
+      'Country': order.customer.country,
+      'Items Count': order.items.reduce((sum, item) => sum + item.quantity, 0),
+      'Items Details': order.items.map(item => `${item.quantity}x ${item.name} (${item.type})`).join('; '),
+      'Total Price': 0
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Orders");
+    XLSX.writeFile(wb, `Georeo_Orders_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
 
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="font-safetyDisplay text-3xl text-white uppercase">Orders Management</h1>
-        <div className="bg-safety-panel px-4 py-2 rounded-lg border border-safety-gray/50 flex items-center gap-2">
-          <ShoppingCart className="w-5 h-5 text-safety-orange" />
-          <span className="text-white font-safetyMono font-bold">{orders.length}</span>
-          <span className="text-safety-light/70 text-sm">Total Orders</span>
+        <div className="flex gap-4">
+          <button 
+            onClick={exportToExcel}
+            className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors cursor-pointer text-sm font-safetySans"
+          >
+            <Download className="w-4 h-4" /> Export to Excel
+          </button>
+          <div className="bg-safety-panel px-4 py-2 rounded-lg border border-safety-gray/50 flex items-center gap-2">
+            <ShoppingCart className="w-5 h-5 text-safety-orange" />
+            <span className="text-white font-safetyMono font-bold">{orders.length}</span>
+            <span className="text-safety-light/70 text-sm">Total Orders</span>
+          </div>
         </div>
       </div>
 

@@ -1,48 +1,113 @@
+import { useState, useEffect } from 'react';
 import { ALL_LABELS } from '../data/labels';
-import { Package } from 'lucide-react';
+import { Package, Edit2, Trash2, Plus } from 'lucide-react';
+import { useAdminStore } from '../store/useAdminStore';
 
 export default function ProductsPage() {
+  const { products, addProduct, updateProduct, deleteProduct } = useAdminStore();
+  const [isEditing, setIsEditing] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ name: '', price: 0, url: '' });
+  const [isAdding, setIsAdding] = useState(false);
+
+  // Initialize products from ALL_LABELS if empty
+  useEffect(() => {
+    if (products.length === 0) {
+      ALL_LABELS.forEach(label => {
+        addProduct({ name: label.name, price: 50, url: label.url, type: 'label' });
+      });
+    }
+  }, []);
+
+  const handleEdit = (product: any) => {
+    setIsEditing(product.id);
+    setEditForm({ name: product.name, price: product.price, url: product.url });
+  };
+
+  const handleSave = (id: string) => {
+    updateProduct(id, editForm);
+    setIsEditing(null);
+  };
+
+  const handleAdd = () => {
+    if (editForm.name && editForm.url) {
+      addProduct({ name: editForm.name, price: editForm.price, url: editForm.url, type: 'custom' });
+      setIsAdding(false);
+      setEditForm({ name: '', price: 0, url: '' });
+    }
+  };
+
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="font-safetyDisplay text-3xl text-white uppercase">Product Inventory</h1>
-        <div className="bg-safety-panel px-4 py-2 rounded-lg border border-safety-gray/50 flex items-center gap-2">
-          <Package className="w-5 h-5 text-safety-orange" />
-          <span className="text-white font-safetyMono font-bold">{ALL_LABELS.length + 2}</span>
-          <span className="text-safety-light/70 text-sm">Total Items</span>
+        <div className="flex gap-4">
+          <button 
+            onClick={() => { setIsAdding(true); setEditForm({ name: '', price: 0, url: '' }); }}
+            className="bg-safety-orange hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors cursor-pointer text-sm font-safetySans"
+          >
+            <Plus className="w-4 h-4" /> Add Product
+          </button>
+          <div className="bg-safety-panel px-4 py-2 rounded-lg border border-safety-gray/50 flex items-center gap-2">
+            <Package className="w-5 h-5 text-safety-orange" />
+            <span className="text-white font-safetyMono font-bold">{products.length}</span>
+            <span className="text-safety-light/70 text-sm">Total Items</span>
+          </div>
         </div>
       </div>
 
-      <div className="mb-12">
-        <h2 className="font-safetyDisplay text-xl text-white uppercase mb-4 border-b border-safety-gray/30 pb-2">3D Engineered Boards</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[{ title: "Standard Site Safety", size: "1200x900mm" }, { title: "Hazmat Protocol", size: "1800x1200mm" }].map((board, i) => (
-            <div key={i} className="bg-safety-panel border border-safety-gray/50 rounded-xl p-6 flex justify-between items-center">
-              <div>
-                <h3 className="text-white font-bold text-lg">{board.title}</h3>
-                <p className="text-safety-light/70 text-sm font-safetyMono">Size: {board.size}</p>
-              </div>
-              <div className="text-safety-orange font-safetyMono">0 EGP</div>
-            </div>
-          ))}
+      {isAdding && (
+        <div className="bg-safety-panel border border-safety-orange rounded-xl p-6 mb-8 flex flex-wrap gap-4 items-end">
+          <div className="flex-1 min-w-[200px]">
+            <label className="block text-xs text-safety-light/70 mb-1">Product Name</label>
+            <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white" />
+          </div>
+          <div className="w-32">
+            <label className="block text-xs text-safety-light/70 mb-1">Price (EGP)</label>
+            <input type="number" value={editForm.price} onChange={e => setEditForm({...editForm, price: Number(e.target.value)})} className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white" />
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <label className="block text-xs text-safety-light/70 mb-1">Image URL</label>
+            <input type="text" value={editForm.url} onChange={e => setEditForm({...editForm, url: e.target.value})} className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white" />
+          </div>
+          <div className="flex gap-2">
+            <button onClick={handleAdd} className="bg-green-600 text-white px-4 py-2 rounded font-bold">Save</button>
+            <button onClick={() => setIsAdding(false)} className="bg-red-600 text-white px-4 py-2 rounded font-bold">Cancel</button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div>
-        <h2 className="font-safetyDisplay text-xl text-white uppercase mb-4 border-b border-safety-gray/30 pb-2">Standard Labels ({ALL_LABELS.length})</h2>
+        <h2 className="font-safetyDisplay text-xl text-white uppercase mb-4 border-b border-safety-gray/30 pb-2">Products ({products.length})</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {ALL_LABELS.map((label) => (
+          {products.map((product) => (
             <div 
-              key={label.id} 
-              className="bg-safety-panel border border-safety-gray/50 rounded-xl overflow-hidden flex flex-col hover:border-safety-orange transition-colors"
+              key={product.id} 
+              className="bg-safety-panel border border-safety-gray/50 rounded-xl overflow-hidden flex flex-col hover:border-safety-orange transition-colors group relative"
             >
-              <div className="aspect-square bg-black/50 p-4 flex items-center justify-center">
-                <img src={label.url} alt={label.name} className="w-full h-full object-contain" loading="lazy" />
+              <div className="aspect-square bg-black/50 p-4 flex items-center justify-center relative">
+                <img src={product.url} alt={product.name} className="w-full h-full object-contain" loading="lazy" />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 transition-opacity">
+                  <button onClick={() => handleEdit(product)} className="bg-white/20 hover:bg-white/40 p-2 rounded-full text-white cursor-pointer"><Edit2 className="w-4 h-4" /></button>
+                  <button onClick={() => { if(confirm('Delete product?')) deleteProduct(product.id) }} className="bg-red-500/80 hover:bg-red-500 p-2 rounded-full text-white cursor-pointer"><Trash2 className="w-4 h-4" /></button>
+                </div>
               </div>
-              <div className="p-3 border-t border-safety-gray/50 text-center">
-                <h3 className="text-white text-xs font-bold truncate" title={label.name}>{label.name}</h3>
-                <p className="text-safety-orange text-xs font-safetyMono mt-1">0 EGP</p>
-              </div>
+
+              {isEditing === product.id ? (
+                <div className="p-3 border-t border-safety-gray/50 flex flex-col gap-2">
+                  <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="w-full bg-black text-xs text-white p-1 rounded" />
+                  <input type="number" value={editForm.price} onChange={e => setEditForm({...editForm, price: Number(e.target.value)})} className="w-full bg-black text-xs text-white p-1 rounded" />
+                  <input type="text" value={editForm.url} onChange={e => setEditForm({...editForm, url: e.target.value})} className="w-full bg-black text-xs text-white p-1 rounded" placeholder="Image URL" />
+                  <div className="flex gap-2 mt-1">
+                    <button onClick={() => handleSave(product.id)} className="bg-green-600 text-white text-xs px-2 py-1 rounded w-full">Save</button>
+                    <button onClick={() => setIsEditing(null)} className="bg-safety-gray text-white text-xs px-2 py-1 rounded w-full">Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 border-t border-safety-gray/50 text-center">
+                  <h3 className="text-white text-xs font-bold truncate" title={product.name}>{product.name}</h3>
+                  <p className="text-safety-orange text-xs font-safetyMono mt-1">{product.price} EGP</p>
+                </div>
+              )}
             </div>
           ))}
         </div>
