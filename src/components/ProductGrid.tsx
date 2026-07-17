@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { useTranslation } from '../lib/i18n/translations';
 
 const PRODUCTS = [
-  { id: 1, title: "Standard Site Safety", size: "1200x900mm", price: "0 EGP", modelUrl: "/models/site_safety_board_3d_with_upload.html" },
-  { id: 2, title: "Hazmat Protocol", size: "1800x1200mm", price: "0 EGP", modelUrl: "/models/site_safety_board_1800x1200_3d.html" },
+  { id: 1, title: "Standard Site Safety", size: "1200x900mm", modelUrl: "/models/site_safety_board_3d_with_upload.html" },
+  { id: 2, title: "Hazmat Protocol", size: "1800x1200mm", modelUrl: "/models/site_safety_board_1800x1200_3d.html" },
 ];
 
 function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
@@ -20,7 +20,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
   const [customNote, setCustomNote] = useState("");
   const { addItem } = useCartStore();
   const { products } = useAdminStore();
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
 
   const applyTexture = (label: AdminProduct) => {
     setSelectedLabel(label);
@@ -78,7 +78,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
   };
 
   return (
-    <div className="relative w-full z-10 hover:z-20">
+    <div className={`relative w-full ${isCustomizing ? 'z-50' : 'z-10 hover:z-20'}`}>
       <div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -117,12 +117,6 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
           <div className="absolute bottom-0 left-0 p-6 w-full pointer-events-none flex flex-col justify-end" style={{ transform: "translateZ(30px)" }}>
             <div className="flex justify-between items-end mb-2">
               <div className="font-safetyMono text-safety-orange text-xs">{t('sign.spec')}: {product.size}</div>
-              {product.price && (
-                <div className={`font-safetyMono text-white/70 text-[10px] uppercase max-w-[140px] leading-tight ${language === 'ar' ? 'text-left' : 'text-right'}`}>
-                  {t('sign.price')}: <span className="text-safety-orange text-sm">{product.price}</span>
-                  <div className="text-[8px] text-safety-light/50 mt-0.5">{t('sign.orderConfirm')}</div>
-                </div>
-              )}
             </div>
             <h3 className="font-safetyDisplay text-3xl uppercase text-white leading-none">{product.title}</h3>
             {product.modelUrl && (

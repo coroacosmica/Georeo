@@ -66,7 +66,6 @@ export default function StandardLabels() {
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2">
-                  <div className="text-white font-safetyMono font-bold text-lg">{label.price} {t('common.egp')}</div>
                   <div className="text-[9px] text-center px-4 text-safety-light/70 mb-2 leading-tight">{t('labels.orderConfirm')}</div>
                   <button 
                     onClick={() => handleAddToCart(label)}
@@ -76,8 +75,17 @@ export default function StandardLabels() {
                   </button>
                 </div>
               </div>
-              <div className="p-4 border-t border-safety-gray/50 mt-auto">
-                <h3 className="font-safetyDisplay text-sm text-white uppercase text-center truncate" title={label.name}>{label.name}</h3>
+              <div className="p-3 border-t border-safety-gray/50 mt-auto flex flex-col items-center justify-between gap-2 h-full bg-safety-panel z-10">
+                <h3 className="font-safetyDisplay text-xs text-white uppercase text-center line-clamp-2 w-full" title={label.name}>{label.name === "Abstract Pattern" ? "Safety Label" : label.name}</h3>
+                <div className="text-safety-orange font-safetyMono font-bold text-sm bg-black/50 px-3 py-1 rounded w-full text-center border border-safety-gray/30">
+                  {label.price} {t('common.egp')}
+                </div>
+                <button 
+                  onClick={() => handleAddToCart(label)}
+                  className="md:hidden w-full px-4 py-2 bg-safety-orange text-safety-dark font-bold text-xs uppercase rounded hover:bg-yellow-500 transition-colors cursor-pointer mt-1"
+                >
+                  {t('labels.addToCart')}
+                </button>
               </div>
             </motion.div>
           ))}

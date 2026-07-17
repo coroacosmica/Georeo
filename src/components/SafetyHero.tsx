@@ -4,7 +4,7 @@ import { useTranslation } from '../lib/i18n/translations';
 export default function SafetyHero() {
   const { t } = useTranslation();
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-safety-dark">
+    <section className="relative min-h-screen flex items-center justify-center pt-36 md:pt-24 lg:pt-20 overflow-hidden bg-safety-dark">
       {/* Background industrial grid pattern */}
       <div 
         className="absolute inset-0 opacity-10 pointer-events-none"
