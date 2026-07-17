@@ -38,6 +38,10 @@ interface AdminStore {
   addProduct: (product: Omit<AdminProduct, 'id'>) => void;
   updateProduct: (id: string, updates: Partial<AdminProduct>) => void;
   deleteProduct: (id: string) => void;
+  
+  isAuthenticated: boolean;
+  login: (password: string) => boolean;
+  logout: () => void;
 }
 
 export const useAdminStore = create<AdminStore>()(
@@ -89,6 +93,17 @@ export const useAdminStore = create<AdminStore>()(
       deleteProduct: (id) => set((state) => ({
         products: state.products.filter(p => p.id !== id)
       })),
+
+      isAuthenticated: false,
+      login: (password) => {
+        // Hardcoded password for now: "georeo2026"
+        if (password === 'georeo2026') {
+          set({ isAuthenticated: true });
+          return true;
+        }
+        return false;
+      },
+      logout: () => set({ isAuthenticated: false }),
 
     }),
     {

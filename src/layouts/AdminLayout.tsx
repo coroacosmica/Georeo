@@ -1,8 +1,16 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Package, ShoppingCart, Settings, LogOut } from 'lucide-react';
+import { useAdminStore } from '../store/useAdminStore';
+import AdminLogin from '../pages/AdminLogin';
 
 export default function AdminLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAdminStore();
+
+  if (!isAuthenticated) {
+    return <AdminLogin />;
+  }
 
   const links = [
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
@@ -10,6 +18,12 @@ export default function AdminLayout() {
     { name: 'Products', path: '/admin/products', icon: Package },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];
+
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    logout();
+    navigate('/');
+  };
 
   return (
     <div className="min-h-screen bg-black flex text-safety-light selection:bg-safety-orange selection:text-white font-safetySans">
@@ -43,10 +57,10 @@ export default function AdminLayout() {
         </nav>
 
         <div className="p-4 border-t border-safety-gray/30">
-          <Link to="/" className="flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer">
             <LogOut className="w-5 h-5" />
-            Exit Admin
-          </Link>
+            Exit & Logout
+          </button>
         </div>
       </aside>
 
