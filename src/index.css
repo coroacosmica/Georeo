@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-safety-dark: #0A0C0F;
+  --color-safety-orange: #F2661E;
+  --color-safety-gray: #3A3D42;
+  --color-safety-panel: #1E2024;
+  --color-safety-light: #E2E8F0;
+  
+  --font-safetyDisplay: 'Bebas Neue', sans-serif;
+  --font-safetySans: 'Inter', system-ui, sans-serif;
+  --font-safetyMono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-safety-dark text-safety-light font-safetySans overflow-x-hidden antialiased;
+  }
+}

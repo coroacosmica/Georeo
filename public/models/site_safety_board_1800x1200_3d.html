@@ -1,0 +1,140 @@
+<style>
+  body { margin: 0; padding: 0; overflow: hidden; background: transparent !important; }
+  #wrap { width: 100vw; height: 100vh; position: relative; background: transparent !important; border-radius: 0; }
+  canvas { outline: none; }
+</style>
+<div id="wrap">
+  <canvas id="c" style="width:100%;height:100%;display:block;"></canvas>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  var wrap = document.getElementById('wrap');
+  var canvas = document.getElementById('c');
+  var W = wrap.clientWidth, H = wrap.clientHeight;
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(32, W/H, 0.1, 100);
+  camera.position.set(0, 0.3, 6.6);
+  camera.lookAt(0,0,0);
+
+  var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true, alpha:true});
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+
+  var amb = new THREE.AmbientLight(0xffffff, 0.75);
+  scene.add(amb);
+  var dir = new THREE.DirectionalLight(0xffffff, 0.6);
+  dir.position.set(3,5,4);
+  scene.add(dir);
+
+  var group = new THREE.Group();
+  scene.add(group);
+
+  var darkMat = new THREE.MeshStandardMaterial({color:0x2c2c2a, roughness:0.6, metalness:0.3});
+  var frameMat = new THREE.MeshStandardMaterial({color:0x3a3a38, roughness:0.5, metalness:0.4});
+  var faceMat = new THREE.MeshStandardMaterial({color:0xf1efe8, roughness:0.9, metalness:0});
+
+  var boardW = 1.8, boardH = 1.2, boardT = 0.06;
+  var baseH = 0.3;
+  var frameThick = 0.05;
+
+  var groundY = -(boardH/2 + baseH/2);
+  var boardBottomY = groundY + baseH;
+  var boardCenterY = boardBottomY + boardH/2;
+
+  var frame = new THREE.Mesh(new THREE.BoxGeometry(boardW, boardH, boardT), frameMat);
+  frame.position.y = boardCenterY;
+  group.add(frame);
+
+  var faceGeom = new THREE.BoxGeometry(boardW - frameThick*2, boardH - frameThick*2, boardT*0.5);
+  var face = new THREE.Mesh(faceGeom, faceMat);
+  face.position.set(0, boardCenterY, boardT/2 + 0.005);
+  group.add(face);
+
+  var postW = 0.06;
+  [-1,1].forEach(function(side){
+    var post = new THREE.Mesh(new THREE.BoxGeometry(postW, baseH, postW), darkMat);
+    post.position.set(side*(boardW/2 - 0.25), groundY + baseH/2, 0);
+    group.add(post);
+    var footplate = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.025, 0.22), darkMat);
+    footplate.position.set(side*(boardW/2 - 0.25), groundY - 0.0125, 0);
+    group.add(footplate);
+  });
+
+  var dragging = false, lastX = 0, lastY = 0;
+  var rotY = 0.3, rotX = -0.02;
+  function applyRot(){ group.rotation.y = rotY; group.rotation.x = rotX; }
+  applyRot();
+
+  function down(x,y){ dragging = true; lastX = x; lastY = y; }
+  function move(x,y){
+    if(!dragging) return;
+    var dx = x - lastX, dy = y - lastY;
+    rotY += dx * 0.008;
+    rotX = Math.max(-0.5, Math.min(0.5, rotX + dy * 0.006));
+    lastX = x; lastY = y;
+    applyRot();
+  }
+  function up(){ dragging = false; }
+
+  var autoRotate = true;
+  canvas.addEventListener('mousedown', function(e){ autoRotate=false; down(e.clientX, e.clientY); });
+  window.addEventListener('mousemove', function(e){ move(e.clientX, e.clientY); });
+  window.addEventListener('mouseup', up);
+  canvas.addEventListener('touchstart', function(e){ autoRotate=false; var t=e.touches[0]; down(t.clientX, t.clientY); }, {passive:true});
+  canvas.addEventListener('touchmove', function(e){ var t=e.touches[0]; move(t.clientX, t.clientY); }, {passive:true});
+  canvas.addEventListener('touchend', up);
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if(autoRotate && !dragging){ rotY += 0.003; applyRot(); }
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  function onResize(){
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w,h);
+  }
+  window.addEventListener('resize', onResize);
+
+  var fileInput = document.getElementById('imgInput');
+  var uploadBtn = document.getElementById('uploadBtn');
+  var resetBtn = document.getElementById('resetBtn');
+  uploadBtn.addEventListener('click', function(){ fileInput.click(); });
+
+  fileInput.addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var loader = new THREE.TextureLoader();
+      loader.load(ev.target.result, function(tex){
+        tex.encoding = THREE.sRGBEncoding;
+        face.material = new THREE.MeshBasicMaterial({map: tex});
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+
+  resetBtn.addEventListener('click', function(){
+    face.material = faceMat;
+    fileInput.value = '';
+  });
+
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'SET_TEXTURE') {
+      var loader = new THREE.TextureLoader();
+      loader.load(event.data.url, function(tex){
+        tex.encoding = THREE.sRGBEncoding;
+        face.material = new THREE.MeshBasicMaterial({map: tex});
+      });
+    } else if (event.data && event.data.type === 'RESET_TEXTURE') {
+      face.material = faceMat;
+    }
+  });
+})();
+</script>
