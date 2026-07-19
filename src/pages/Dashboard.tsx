@@ -3,12 +3,12 @@ import { useAnalyticsStore } from '../store/useAnalyticsStore';
 import { ALL_LABELS } from '../data/labels';
 import { useTranslation } from '../lib/i18n/translations';
 export default function Dashboard() {
-  const { orders } = useAdminStore();
+  const { orders, products } = useAdminStore();
   const { pageViews, uniqueVisitors, topPages } = useAnalyticsStore();
   const { t } = useTranslation();
 
   // Real-time calculated stats
-  const totalProducts = ALL_LABELS.length + 2;
+  const totalProducts = products.length;
   const newRequests = orders.filter(o => o.status === 'Pending').length;
   const contactedCount = orders.filter(o => o.status === 'Confirmed' || o.status === 'Shipped').length;
   const completedCount = orders.filter(o => o.status === 'Shipped').length; // Assuming shipped means completed

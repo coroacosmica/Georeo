@@ -19,8 +19,17 @@ import Dashboard from "./pages/Dashboard";
 import OrdersPage from "./pages/OrdersPage";
 import ProductsPage from "./pages/ProductsPage";
 import SettingsPage from "./pages/SettingsPage";
+import MaintenancePage from "./pages/MaintenancePage";
 
 import { useAdminStore } from "./store/useAdminStore";
+
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { settings } = useAdminStore();
+  if (settings?.maintenanceMode) {
+    return <MaintenancePage />;
+  }
+  return <>{children}</>;
+}
 
 function AnalyticsTracker() {
   const location = useLocation();
@@ -72,7 +81,7 @@ function App() {
     <BrowserRouter>
       <AnalyticsTracker />
       <Routes>
-        <Route path="/" element={<MainApp />} />
+        <Route path="/" element={<PublicRoute><MainApp /></PublicRoute>} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="orders" element={<OrdersPage />} />

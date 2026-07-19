@@ -38,7 +38,7 @@ export interface AdminSettings {
   contactEmail: string;
   whatsappNumber: string;
   enableWhatsapp: boolean;
-  emailAlerts: boolean;
+  maintenanceMode: boolean;
 }
 
 interface AdminStore {
@@ -210,7 +210,7 @@ export const useAdminStore = create<AdminStore>()(
         contactEmail: 'sales@georeo.com',
         whatsappNumber: '+20 100 000 0000',
         enableWhatsapp: true,
-        emailAlerts: true,
+        maintenanceMode: false,
       },
       updateSettings: (newSettings) => set((state) => ({
         settings: { ...state.settings, ...newSettings }

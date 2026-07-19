@@ -8,10 +8,22 @@ export default function SettingsPage() {
   const { t } = useTranslation();
   const { settings, updateSettings } = useAdminStore();
   
-  const [formData, setFormData] = useState(settings);
+  const [formData, setFormData] = useState({
+    storeName: settings?.storeName || '',
+    contactEmail: settings?.contactEmail || '',
+    whatsappNumber: settings?.whatsappNumber || '',
+    enableWhatsapp: settings?.enableWhatsapp ?? true,
+    maintenanceMode: settings?.maintenanceMode ?? false,
+  });
 
   useEffect(() => {
-    setFormData(settings);
+    setFormData({
+      storeName: settings?.storeName || '',
+      contactEmail: settings?.contactEmail || '',
+      whatsappNumber: settings?.whatsappNumber || '',
+      enableWhatsapp: settings?.enableWhatsapp ?? true,
+      maintenanceMode: settings?.maintenanceMode ?? false,
+    });
   }, [settings]);
 
   const handleSave = (e: React.FormEvent) => {
@@ -50,10 +62,19 @@ export default function SettingsPage() {
               <input type="checkbox" checked={formData.enableWhatsapp} onChange={e => setFormData({...formData, enableWhatsapp: e.target.checked})} className="w-5 h-5 accent-safety-orange" />
               <span className="text-safety-light/80">{t('adminSettings.enableWhatsapp')}</span>
             </label>
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input type="checkbox" checked={formData.emailAlerts} onChange={e => setFormData({...formData, emailAlerts: e.target.checked})} className="w-5 h-5 accent-safety-orange" />
-              <span className="text-safety-light/80">{t('adminSettings.emailAlerts')}</span>
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <div className="relative">
+                <input 
+                  type="checkbox" 
+                  checked={formData.maintenanceMode}
+                  onChange={(e) => setFormData({...formData, maintenanceMode: e.target.checked})}
+                  className="sr-only peer" 
+                />
+                <div className="w-11 h-6 bg-safety-gray/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-safety-orange"></div>
+              </div>
+              <span className="text-white font-safetySans group-hover:text-safety-orange transition-colors">Enable Maintenance Mode (Coming Soon page)</span>
             </label>
+            <p className="text-safety-light/50 text-sm mt-1 ml-14">Hide the store and show a coming soon page to visitors.</p>
           </div>
         </div>
 
