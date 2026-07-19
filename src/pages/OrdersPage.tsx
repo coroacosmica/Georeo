@@ -109,13 +109,27 @@ export default function OrdersPage() {
                   <p className="text-white"><span className="text-safety-light/70 w-24 inline-block">{t('orders.phone')}:</span> <span dir="ltr">{order.customer.phone}</span></p>
                   <p className="text-white"><span className="text-safety-light/70 w-24 inline-block">{t('orders.email')}:</span> <span dir="ltr">{order.customer.email}</span></p>
                   <p className="text-white"><span className="text-safety-light/70 w-24 inline-block">{t('orders.address')}:</span> {order.customer.address}, {order.customer.country}</p>
-                  {order.customer.uploadedDesign && (
-                    <div className="mt-4 border border-dashed border-safety-gray/50 rounded-lg p-2 bg-black/20 text-center">
-                      <p className="text-xs text-safety-light/50 uppercase mb-2">Uploaded Design</p>
-                      {order.customer.uploadedDesign.startsWith('data:image') ? (
-                        <img src={order.customer.uploadedDesign} alt="Uploaded Design" className="max-h-32 mx-auto rounded" />
-                      ) : (
-                        <a href={order.customer.uploadedDesign} download="custom_design" className="text-safety-orange underline text-sm">Download File</a>
+                  {(order.customer.uploadedDesign || order.customer.uploadedLogo) && (
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                      {order.customer.uploadedDesign && (
+                        <div className="border border-dashed border-safety-gray/50 rounded-lg p-2 bg-black/20 text-center">
+                          <p className="text-xs text-safety-light/50 uppercase mb-2">Uploaded Design</p>
+                          {order.customer.uploadedDesign.startsWith('data:image') ? (
+                            <img src={order.customer.uploadedDesign} alt="Uploaded Design" className="max-h-32 mx-auto rounded" />
+                          ) : (
+                            <a href={order.customer.uploadedDesign} download="custom_design" className="text-safety-orange underline text-sm">Download File</a>
+                          )}
+                        </div>
+                      )}
+                      {order.customer.uploadedLogo && (
+                        <div className="border border-dashed border-safety-gray/50 rounded-lg p-2 bg-black/20 text-center">
+                          <p className="text-xs text-safety-light/50 uppercase mb-2">Uploaded Logo</p>
+                          {order.customer.uploadedLogo.startsWith('data:image') ? (
+                            <img src={order.customer.uploadedLogo} alt="Uploaded Logo" className="max-h-32 mx-auto rounded" />
+                          ) : (
+                            <a href={order.customer.uploadedLogo} download="custom_logo" className="text-safety-orange underline text-sm">Download File</a>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}

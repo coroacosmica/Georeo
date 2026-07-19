@@ -16,37 +16,58 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [isCustomizing, setIsCustomizing] = useState(false);
-  const [selectedLabel, setSelectedLabel] = useState<AdminProduct | null>(null);
+  const [selectedLabels, setSelectedLabels] = useState<AdminProduct[]>([]);
   const [customNote, setCustomNote] = useState("");
   const { addItem } = useCartStore();
   const { products } = useAdminStore();
   const { t } = useTranslation();
 
   const applyTexture = (label: AdminProduct) => {
-    setSelectedLabel(label);
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.postMessage({ type: 'SET_TEXTURE', url: encodeURI(label.url) }, '*');
-    }
+    setSelectedLabels(prev => {
+      const isSelected = prev.some(l => l.url === label.url);
+      let newSelection;
+      if (isSelected) {
+        newSelection = prev.filter(l => l.url !== label.url);
+      } else {
+        newSelection = [...prev, label];
+      }
+      
+      // Update 3D model with the most recently selected texture, or reset if empty
+      if (iframeRef.current && iframeRef.current.contentWindow) {
+        if (newSelection.length > 0) {
+          const latestLabel = newSelection[newSelection.length - 1];
+          iframeRef.current.contentWindow.postMessage({ type: 'SET_TEXTURE', url: encodeURI(latestLabel.url) }, '*');
+        } else {
+          iframeRef.current.contentWindow.postMessage({ type: 'RESET_TEXTURE' }, '*');
+        }
+      }
+      return newSelection;
+    });
   };
 
   const resetTexture = () => {
-    setSelectedLabel(null);
+    setSelectedLabels([]);
     if (iframeRef.current && iframeRef.current.contentWindow) {
       iframeRef.current.contentWindow.postMessage({ type: 'RESET_TEXTURE' }, '*');
     }
   };
 
   const handleAddToCart = () => {
+    if (selectedLabels.length === 0) {
+      toast.error('Please select at least one design');
+      return;
+    }
+    
     addItem({
-      id: `3d-${product.id}-${selectedLabel?.id || 'base'}-${Date.now()}`,
-      name: `${product.title} ${selectedLabel ? `(${selectedLabel.name})` : ''}`,
+      id: `3d-${product.id}-${Date.now()}`,
+      name: `${product.title} (${selectedLabels.map(l => l.name).join(', ')})`,
       price: 0,
       quantity: 1,
       type: '3D_BOARD',
       size: product.size,
-      customLabel: selectedLabel?.url,
+      customLabel: selectedLabels.map(l => l.url).join(','),
       customNote: customNote,
-      image: selectedLabel?.url || '/images/Georeo-bk.png'
+      image: selectedLabels[0]?.url || '/images/Georeo-bk.png'
     });
     toast.success(`${product.title} added to your cart!`);
     setIsCustomizing(false);
@@ -171,7 +192,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
               <button 
                 key={label.id}
                 onClick={() => applyTexture(label)}
-                className={`aspect-square bg-black border ${selectedLabel?.url === label.url ? 'border-safety-orange ring-2 ring-safety-orange/50' : 'border-safety-gray/50 hover:border-safety-orange'} rounded overflow-hidden transition-all cursor-pointer p-1`}
+                className={`aspect-square bg-black border ${selectedLabels.some(l => l.url === label.url) ? 'border-safety-orange ring-2 ring-safety-orange/50' : 'border-safety-gray/50 hover:border-safety-orange'} rounded overflow-hidden transition-all cursor-pointer p-1`}
                 title={label.name}
               >
                 <img src={label.url} alt={label.name} className="w-full h-full object-contain" loading="lazy" />

@@ -11,13 +11,14 @@ export default function CheckoutModal() {
   const { t, language } = useTranslation();
   const [isSuccess, setIsSuccess] = useState(false);
   const [uploadedDesign, setUploadedDesign] = useState<string | undefined>();
+  const [uploadedLogo, setUploadedLogo] = useState<string | undefined>();
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, setFileState: React.Dispatch<React.SetStateAction<string | undefined>>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUploadedDesign(reader.result as string);
+        setFileState(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -34,7 +35,8 @@ export default function CheckoutModal() {
       country: formData.get('country') as string,
       email: formData.get('email') as string,
       address: formData.get('address') as string,
-      uploadedDesign
+      uploadedDesign,
+      uploadedLogo
     };
 
     addOrder({
@@ -48,6 +50,7 @@ export default function CheckoutModal() {
       setIsSuccess(false);
       clearCart();
       setUploadedDesign(undefined);
+      setUploadedLogo(undefined);
       toggleCheckout();
     }, 3000);
   };
@@ -68,7 +71,7 @@ export default function CheckoutModal() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-xl bg-safety-dark border border-safety-orange/30 rounded-2xl shadow-2xl overflow-hidden p-8"
+            className="relative w-full max-w-xl bg-safety-dark border border-safety-orange/30 rounded-2xl shadow-2xl overflow-hidden p-4 md:p-8 max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
             {isSuccess ? (
               <div className="py-12 flex flex-col items-center text-center">
@@ -125,10 +128,18 @@ export default function CheckoutModal() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">Upload Design (Optional)</label>
-                    <input type="file" accept="image/*,.pdf,.doc,.docx" onChange={handleFileUpload} className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-safety-orange file:text-safety-dark hover:file:bg-yellow-500" />
-                    {uploadedDesign && <p className="text-xs text-green-500 mt-2 font-safetyMono">✓ File attached successfully</p>}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">Upload Design (Optional)</label>
+                      <input type="file" accept="image/*,.pdf,.doc,.docx" onChange={(e) => handleFileUpload(e, setUploadedDesign)} className="w-full bg-black border border-safety-gray/50 rounded-lg p-2 text-white text-sm file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-safety-orange file:text-safety-dark hover:file:bg-yellow-500 cursor-pointer" />
+                      {uploadedDesign && <p className="text-xs text-green-500 mt-1 font-safetyMono">✓ Design attached</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">Upload Logo (Optional)</label>
+                      <input type="file" accept="image/*,.pdf,.eps,.ai" onChange={(e) => handleFileUpload(e, setUploadedLogo)} className="w-full bg-black border border-safety-gray/50 rounded-lg p-2 text-white text-sm file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-safety-orange file:text-safety-dark hover:file:bg-yellow-500 cursor-pointer" />
+                      {uploadedLogo && <p className="text-xs text-green-500 mt-1 font-safetyMono">✓ Logo attached</p>}
+                    </div>
                   </div>
 
                   <div className={`flex justify-end gap-4 mt-8 pt-6 border-t border-safety-gray/30 ${language === 'ar' ? 'flex-row-reverse' : ''}`}>

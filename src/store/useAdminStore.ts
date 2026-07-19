@@ -12,6 +12,7 @@ export interface OrderCustomer {
   email: string;
   address: string;
   uploadedDesign?: string;
+  uploadedLogo?: string;
 }
 
 export interface AdminOrder {
