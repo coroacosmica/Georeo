@@ -34,11 +34,17 @@ function AnalyticsTracker() {
 }
 
 function MainApp() {
-  const { fetchProducts } = useAdminStore();
+  const { fetchProducts, settings } = useAdminStore();
   
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    if (settings?.storeName) {
+      document.title = settings.storeName;
+    }
+  }, [settings?.storeName]);
   return (
     <div className="bg-safety-dark min-h-screen text-safety-light selection:bg-safety-orange selection:text-white">
       <Toaster position="bottom-center" theme="dark" toastOptions={{ style: { background: '#111', border: '1px solid #FF5A00', color: '#fff' } }} />

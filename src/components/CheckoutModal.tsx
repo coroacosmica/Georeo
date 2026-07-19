@@ -7,7 +7,7 @@ import { useTranslation } from '../lib/i18n/translations';
 
 export default function CheckoutModal() {
   const { getTotalPrice, items, clearCart, isCheckoutOpen, toggleCheckout } = useCartStore();
-  const { addOrder } = useAdminStore();
+  const { addOrder, settings } = useAdminStore();
   const { t, language } = useTranslation();
   const [isSuccess, setIsSuccess] = useState(false);
   const [uploadedDesign, setUploadedDesign] = useState<string | undefined>();
@@ -44,6 +44,12 @@ export default function CheckoutModal() {
       items: [...items],
       totalPrice: getTotalPrice(),
     });
+
+    if (settings.enableWhatsapp && settings.whatsappNumber) {
+      const cleanNumber = settings.whatsappNumber.replace(/\D/g, '');
+      const text = `New Order from ${customer.fullName}%0ACompany: ${customer.company}%0ATotal: ${getTotalPrice()} EGP`;
+      window.open(`https://wa.me/${cleanNumber}?text=${text}`, '_blank');
+    }
 
     setIsSuccess(true);
     setTimeout(() => {
