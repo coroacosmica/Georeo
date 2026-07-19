@@ -2,14 +2,31 @@ import { useAdminStore } from '../store/useAdminStore';
 import { useAnalyticsStore } from '../store/useAnalyticsStore';
 import { ALL_LABELS } from '../data/labels';
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip 
 } from 'recharts';
 import { useTranslation } from '../lib/i18n/translations';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Dashboard() {
   const { orders } = useAdminStore();
   const { pageViews, uniqueVisitors, trafficData, topPages } = useAnalyticsStore();
   const { t } = useTranslation();
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [chartDims, setChartDims] = useState({ width: 0, height: 300 });
+
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      if (!Array.isArray(entries) || !entries.length) return;
+      const { width, height } = entries[0].contentRect;
+      // Prevent resize loop errors by using requestAnimationFrame
+      window.requestAnimationFrame(() => {
+        setChartDims({ width, height });
+      });
+    });
+    observer.observe(chartContainerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   // Real-time calculated stats
   const totalProducts = ALL_LABELS.length + 2;
@@ -87,9 +104,9 @@ export default function Dashboard() {
           {/* Chart Area */}
           <div className="lg:col-span-2 bg-safety-panel p-6 rounded-lg border border-safety-gray/50">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6">{t('dashboard.traffic')}</h4>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={trafficData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
+            <div className="h-[300px] w-full" ref={chartContainerRef}>
+              {chartDims.width > 0 && (
+                <LineChart width={chartDims.width} height={chartDims.height} data={trafficData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#3A3D42" />
                   <XAxis 
                     dataKey="time" 
@@ -118,7 +135,7 @@ export default function Dashboard() {
                     activeDot={{ r: 6, fill: '#F2661E', stroke: '#0A0C0F' }}
                   />
                 </LineChart>
-              </ResponsiveContainer>
+              )}
             </div>
           </div>
 
