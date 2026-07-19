@@ -1,32 +1,11 @@
 import { useAdminStore } from '../store/useAdminStore';
 import { useAnalyticsStore } from '../store/useAnalyticsStore';
 import { ALL_LABELS } from '../data/labels';
-import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip 
-} from 'recharts';
 import { useTranslation } from '../lib/i18n/translations';
-import { useState, useEffect, useRef } from 'react';
-
 export default function Dashboard() {
   const { orders } = useAdminStore();
-  const { pageViews, uniqueVisitors, trafficData, topPages } = useAnalyticsStore();
+  const { pageViews, uniqueVisitors, topPages } = useAnalyticsStore();
   const { t } = useTranslation();
-  const chartContainerRef = useRef<HTMLDivElement>(null);
-  const [chartDims, setChartDims] = useState({ width: 0, height: 300 });
-
-  useEffect(() => {
-    if (!chartContainerRef.current) return;
-    const observer = new ResizeObserver((entries) => {
-      if (!Array.isArray(entries) || !entries.length) return;
-      const { width, height } = entries[0].contentRect;
-      // Prevent resize loop errors by using requestAnimationFrame
-      window.requestAnimationFrame(() => {
-        setChartDims({ width, height });
-      });
-    });
-    observer.observe(chartContainerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   // Real-time calculated stats
   const totalProducts = ALL_LABELS.length + 2;
@@ -100,45 +79,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Chart Area */}
-          <div className="lg:col-span-2 bg-safety-panel p-6 rounded-lg border border-safety-gray/50">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6">{t('dashboard.traffic')}</h4>
-            <div className="h-[300px] w-full" ref={chartContainerRef}>
-              {chartDims.width > 0 && (
-                <LineChart width={chartDims.width} height={chartDims.height} data={trafficData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#3A3D42" />
-                  <XAxis 
-                    dataKey="time" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: '#E2E8F0', opacity: 0.5, fontSize: 12, fontFamily: 'JetBrains Mono' }} 
-                    dy={10}
-                  />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: '#E2E8F0', opacity: 0.5, fontSize: 12, fontFamily: 'JetBrains Mono' }} 
-                    dx={-10}
-                    ticks={[8, 16, 24, 32, 40]}
-                  />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#1E2024', border: '1px solid #3A3D42', borderRadius: '8px', color: '#fff', fontFamily: 'JetBrains Mono' }}
-                    itemStyle={{ color: '#F2661E' }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="visitors" 
-                    stroke="#F2661E" 
-                    strokeWidth={2}
-                    dot={{ r: 4, fill: '#0A0C0F', stroke: '#F2661E', strokeWidth: 2 }}
-                    activeDot={{ r: 6, fill: '#F2661E', stroke: '#0A0C0F' }}
-                  />
-                </LineChart>
-              )}
-            </div>
-          </div>
-
+        <div className="grid grid-cols-1 gap-6">
           {/* Top Pages List */}
           <div className="bg-safety-panel p-6 rounded-lg border border-safety-gray/50">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6">{t('dashboard.topPages')}</h4>
@@ -151,7 +92,7 @@ export default function Dashboard() {
                     </span>
                     <span className="text-safety-light/70 truncate max-w-[120px]" dir="ltr">{page.path}</span>
                   </div>
-                  <span className="font-bold text-white">{page.views}</span>
+                  <span className="font-bold text-white">{page.views} views</span>
                 </div>
               ))}
               {topPages.length === 0 && (

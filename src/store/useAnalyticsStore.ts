@@ -11,25 +11,14 @@ export interface TrafficPoint {
   visitors: number;
 }
 
-interface AnalyticsState {
   pageViews: number;
   uniqueVisitors: number;
   topPages: PageStat[];
-  trafficData: TrafficPoint[];
-  lastVisited: number | null;
+  hasVisitedBefore: boolean;
   trackVisit: (path: string) => void;
 }
 
-// Generate base traffic data
-const initialTrafficData: TrafficPoint[] = [
-  { time: '00:00', visitors: 12 },
-  { time: '04:00', visitors: 5 },
-  { time: '08:00', visitors: 22 },
-  { time: '12:00', visitors: 18 },
-  { time: '16:00', visitors: 30 },
-  { time: '20:00', visitors: 45 },
-  { time: '23:59', visitors: 15 },
-];
+// Removed dummy traffic data
 
 export const useAnalyticsStore = create<AnalyticsState>()(
   persist(
@@ -40,15 +29,10 @@ export const useAnalyticsStore = create<AnalyticsState>()(
         { path: '/', views: 98 },
         { path: '/admin', views: 41 },
       ],
-      trafficData: initialTrafficData,
-      lastVisited: null,
+      hasVisitedBefore: false,
 
       trackVisit: (path: string) => {
-        const now = Date.now();
-        const { lastVisited, pageViews, uniqueVisitors, topPages, trafficData } = get();
-        
-        // Count as unique visitor if last visit was more than 30 mins ago
-        const isUnique = !lastVisited || (now - lastVisited > 30 * 60 * 1000);
+        const { hasVisitedBefore, pageViews, uniqueVisitors, topPages } = get();
         
         // Update top pages
         const updatedPages = [...topPages];
@@ -60,25 +44,30 @@ export const useAnalyticsStore = create<AnalyticsState>()(
         }
         updatedPages.sort((a, b) => b.views - a.views);
 
-        // Update traffic data (simple logic: increment the current 4-hour block)
-        const hour = new Date().getHours();
-        const blockIndex = Math.min(Math.floor(hour / 4), 6);
-        const updatedTraffic = [...trafficData];
-        if (blockIndex >= 0 && blockIndex < updatedTraffic.length) {
-            updatedTraffic[blockIndex].visitors += 1;
-        }
-
         set({
           pageViews: pageViews + 1,
-          uniqueVisitors: isUnique ? uniqueVisitors + 1 : uniqueVisitors,
+          uniqueVisitors: hasVisitedBefore ? uniqueVisitors : uniqueVisitors + 1,
           topPages: updatedPages.slice(0, 5), // Keep top 5
-          trafficData: updatedTraffic,
-          lastVisited: now,
+          hasVisitedBefore: true,
         });
       },
     }),
     {
       name: 'georeo-analytics-storage',
+      version: 1,
+      migrate: (persistedState: any, version: number) => {
+        if (version === 0) {
+          return {
+            ...persistedState,
+            uniqueVisitors: 1, // Reset for the admin to see it correctly as 1 device = 1 user
+            pageViews: persistedState.pageViews || 1,
+            hasVisitedBefore: true,
+            trafficData: undefined,
+            lastVisited: undefined,
+          };
+        }
+        return persistedState;
+      }
     }
   )
 );
