@@ -30,12 +30,6 @@ export const ALL_LABELS = [
     "price": 0
   },
   {
-    "id": "label-5",
-    "name": "1234",
-    "url": "/Labels/1234.jpg",
-    "price": 0
-  },
-  {
     "id": "label-6",
     "name": "Abstract Pattern",
     "url": "/Labels/1553eee8887b0e396ee0b658dd6f129f.jpg",
@@ -162,24 +156,6 @@ export const ALL_LABELS = [
     "price": 0
   },
   {
-    "id": "label-27",
-    "name": "background removal#TUFIUF",
-    "url": "/Labels/background_removal#TUFIUFJNLTAzMU0jMSM2Y2FmMjhhNTNhMzRiYzBiNTFlMTQ3ZGQxNmEyZTRmMCMxNjAwIyNUUkFOU0ZPUk1BVElPTl9SRVFVRVNU.png",
-    "price": 0
-  },
-  {
-    "id": "label-28",
-    "name": "background removal#TUFIUF",
-    "url": "/Labels/background_removal#TUFIUFJOeFdWNkEjMSM2Y2FmMjhhNTNhMzRiYzBiNTFlMTQ3ZGQxNmEyZTRmMCMyMDQ4IyNUUkFOU0ZPUk1BVElPTl9SRVFVRVNU.png",
-    "price": 0
-  },
-  {
-    "id": "label-29",
-    "name": "background removal#TUFIUF",
-    "url": "/Labels/background_removal#TUFIUFJPeGFpOW8jMSM2Y2FmMjhhNTNhMzRiYzBiNTFlMTQ3ZGQxNmEyZTRmMCMyMDQ4IyNUUkFOU0ZPUk1BVElPTl9SRVFVRVNU.png",
-    "price": 0
-  },
-  {
     "id": "label-30",
     "name": "Black and Yellow Simple M",
     "url": "/Labels/Black and Yellow Simple Minimalist Caution Electric Fence Warning Poster.jpg",
@@ -189,12 +165,6 @@ export const ALL_LABELS = [
     "id": "label-31",
     "name": "Blue and White Simple Roa",
     "url": "/Labels/Blue and White Simple Road Works Alert Poster.jpg",
-    "price": 0
-  },
-  {
-    "id": "label-32",
-    "name": "board singe",
-    "url": "/Labels/board singe.jpg",
     "price": 0
   },
   {
@@ -243,18 +213,6 @@ export const ALL_LABELS = [
     "id": "label-40",
     "name": "Abstract Pattern",
     "url": "/Labels/d9ca856e62ddab210e7d42ed2a2e3d5a.jpg",
-    "price": 0
-  },
-  {
-    "id": "label-41",
-    "name": "danger",
-    "url": "/Labels/danger.jpg",
-    "price": 0
-  },
-  {
-    "id": "label-42",
-    "name": "download",
-    "url": "/Labels/download.png",
     "price": 0
   },
   {
@@ -366,12 +324,6 @@ export const ALL_LABELS = [
     "price": 0
   },
   {
-    "id": "label-61",
-    "name": "pull",
-    "url": "/Labels/pull.jpg",
-    "price": 0
-  },
-  {
     "id": "label-62",
     "name": "Red Black White Warning N",
     "url": "/Labels/Red Black White Warning No Smoking Sign Poster Set.jpg",
@@ -384,27 +336,9 @@ export const ALL_LABELS = [
     "price": 0
   },
   {
-    "id": "label-64",
-    "name": "stop 1",
-    "url": "/Labels/stop 1.jpg",
-    "price": 0
-  },
-  {
     "id": "label-65",
     "name": "tow track road",
     "url": "/Labels/tow-track road.jpg",
-    "price": 0
-  },
-  {
-    "id": "label-66",
-    "name": "Untitled 000",
-    "url": "/Labels/Untitled 000.jpg",
-    "price": 0
-  },
-  {
-    "id": "label-67",
-    "name": "Untitled design11",
-    "url": "/Labels/Untitled design11.jpg",
     "price": 0
   },
   {

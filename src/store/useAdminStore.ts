@@ -11,6 +11,7 @@ export interface OrderCustomer {
   country: string;
   email: string;
   address: string;
+  uploadedDesign?: string;
 }
 
 export interface AdminOrder {
@@ -28,6 +29,7 @@ export interface AdminProduct {
   price: number;
   url: string;
   type?: string;
+  fileType?: 'image' | '3d';
 }
 
 interface AdminStore {
@@ -57,8 +59,8 @@ export const useAdminStore = create<AdminStore>()(
         if (supabase) {
           try {
             const { data, error } = await supabase.from('orders').select('*').order('date', { ascending: false });
-            if (!error && data) {
-              set({ orders: data });
+            if (!error) {
+              set({ orders: data || [] });
             }
           } catch (e) {
             console.error('Failed to fetch orders from Supabase', e);
@@ -127,8 +129,8 @@ export const useAdminStore = create<AdminStore>()(
         if (supabase) {
           try {
             const { data, error } = await supabase.from('products').select('*');
-            if (!error && data && data.length > 0) {
-              set({ products: data });
+            if (!error) {
+              set({ products: data || [] });
             }
           } catch (e) {
             console.error('Failed to fetch products from Supabase', e);

@@ -10,6 +10,18 @@ export default function CheckoutModal() {
   const { addOrder } = useAdminStore();
   const { t, language } = useTranslation();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [uploadedDesign, setUploadedDesign] = useState<string | undefined>();
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedDesign(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,6 +34,7 @@ export default function CheckoutModal() {
       country: formData.get('country') as string,
       email: formData.get('email') as string,
       address: formData.get('address') as string,
+      uploadedDesign
     };
 
     addOrder({
@@ -34,6 +47,7 @@ export default function CheckoutModal() {
     setTimeout(() => {
       setIsSuccess(false);
       clearCart();
+      setUploadedDesign(undefined);
       toggleCheckout();
     }, 3000);
   };
@@ -109,6 +123,12 @@ export default function CheckoutModal() {
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">{t('checkout.address')}</label>
                       <input required name="address" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors" />
                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">Upload Design (Optional)</label>
+                    <input type="file" accept="image/*,.pdf,.doc,.docx" onChange={handleFileUpload} className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-safety-orange file:text-safety-dark hover:file:bg-yellow-500" />
+                    {uploadedDesign && <p className="text-xs text-green-500 mt-2 font-safetyMono">✓ File attached successfully</p>}
                   </div>
 
                   <div className={`flex justify-end gap-4 mt-8 pt-6 border-t border-safety-gray/30 ${language === 'ar' ? 'flex-row-reverse' : ''}`}>

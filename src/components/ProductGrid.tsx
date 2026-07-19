@@ -25,7 +25,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
   const applyTexture = (label: AdminProduct) => {
     setSelectedLabel(label);
     if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.postMessage({ type: 'SET_TEXTURE', url: label.url }, '*');
+      iframeRef.current.contentWindow.postMessage({ type: 'SET_TEXTURE', url: encodeURI(label.url) }, '*');
     }
   };
 
@@ -171,7 +171,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
               <button 
                 key={label.id}
                 onClick={() => applyTexture(label)}
-                className={`aspect-square bg-black border ${selectedLabel?.id === label.id ? 'border-safety-orange ring-2 ring-safety-orange/50' : 'border-safety-gray/50 hover:border-safety-orange'} rounded overflow-hidden transition-all cursor-pointer p-1`}
+                className={`aspect-square bg-black border ${selectedLabel?.url === label.url ? 'border-safety-orange ring-2 ring-safety-orange/50' : 'border-safety-gray/50 hover:border-safety-orange'} rounded overflow-hidden transition-all cursor-pointer p-1`}
                 title={label.name}
               >
                 <img src={label.url} alt={label.name} className="w-full h-full object-contain" loading="lazy" />

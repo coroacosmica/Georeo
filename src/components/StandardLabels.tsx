@@ -60,11 +60,18 @@ export default function StandardLabels() {
               className="bg-safety-panel border border-safety-gray rounded-xl overflow-hidden group flex flex-col"
             >
               <div className="aspect-square p-6 flex items-center justify-center bg-white/5 relative">
-                <img 
-                  src={label.url} 
-                  alt={label.name}
-                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                />
+                {label.fileType === '3d' ? (
+                  <iframe 
+                    src={label.url} 
+                    className="w-full h-full border-0 pointer-events-none group-hover:scale-110 transition-transform duration-500" 
+                  />
+                ) : (
+                  <img 
+                    src={label.url} 
+                    alt={label.name}
+                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2">
                   <div className="text-[9px] text-center px-4 text-safety-light/70 mb-2 leading-tight">{t('labels.orderConfirm')}</div>
                   <button 

@@ -7,7 +7,7 @@ export default function ProductsPage() {
   const { products, addProduct, updateProduct, deleteProduct, fetchProducts } = useAdminStore();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ name: '', price: 0, url: '' });
+  const [editForm, setEditForm] = useState<{name: string, price: number, url: string, fileType?: 'image'|'3d'}>({ name: '', price: 0, url: '', fileType: 'image' });
   const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function ProductsPage() {
 
   const handleEdit = (product: any) => {
     setIsEditing(product.id);
-    setEditForm({ name: product.name, price: product.price, url: product.url });
+    setEditForm({ name: product.name, price: product.price, url: product.url, fileType: product.fileType || 'image' });
   };
 
   const handleSave = (id: string) => {
@@ -26,18 +26,19 @@ export default function ProductsPage() {
 
   const handleAdd = () => {
     if (editForm.name && editForm.url) {
-      addProduct({ name: editForm.name, price: editForm.price, url: editForm.url, type: 'custom' });
+      addProduct({ name: editForm.name, price: editForm.price, url: editForm.url, type: 'custom', fileType: editForm.fileType });
       setIsAdding(false);
-      setEditForm({ name: '', price: 0, url: '' });
+      setEditForm({ name: '', price: 0, url: '', fileType: 'image' });
     }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      const is3D = file.name.endsWith('.html') || file.name.endsWith('.glb');
       const reader = new FileReader();
       reader.onloadend = () => {
-        setEditForm({ ...editForm, url: reader.result as string });
+        setEditForm({ ...editForm, url: reader.result as string, fileType: is3D ? '3d' : 'image' });
       };
       reader.readAsDataURL(file);
     }
@@ -49,7 +50,7 @@ export default function ProductsPage() {
         <h1 className="font-safetyDisplay text-3xl text-white uppercase">{t('adminProducts.title')}</h1>
         <div className="flex gap-4">
           <button 
-            onClick={() => { setIsAdding(true); setEditForm({ name: '', price: 0, url: '' }); }}
+            onClick={() => { setIsAdding(true); setEditForm({ name: '', price: 0, url: '', fileType: 'image' }); }}
             className="bg-safety-orange hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors cursor-pointer text-sm font-safetySans"
           >
             <Plus className="w-4 h-4" /> {t('adminProducts.addProduct')}
@@ -73,10 +74,10 @@ export default function ProductsPage() {
             <input type="number" value={editForm.price} onChange={e => setEditForm({...editForm, price: Number(e.target.value)})} className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white" />
           </div>
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-xs text-safety-light/70 mb-1">{t('adminProducts.formImage')}</label>
+            <label className="block text-xs text-safety-light/70 mb-1">{t('adminProducts.formImage')} (Image or 3D .html)</label>
             <div className="flex gap-2">
               <input type="text" value={editForm.url} onChange={e => setEditForm({...editForm, url: e.target.value})} placeholder="URL or Base64" className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white text-xs" />
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full bg-black border border-safety-gray/50 rounded p-1 text-white text-xs" />
+              <input type="file" accept="image/*,.html,.glb" onChange={handleImageUpload} className="w-full bg-black border border-safety-gray/50 rounded p-1 text-white text-xs" />
             </div>
           </div>
           <div className="flex gap-2">
@@ -95,7 +96,11 @@ export default function ProductsPage() {
               className="bg-safety-panel border border-safety-gray/50 rounded-xl overflow-hidden flex flex-col hover:border-safety-orange transition-colors group relative"
             >
               <div className="aspect-square bg-black/50 p-4 flex items-center justify-center relative">
-                <img src={product.url} alt={product.name} className="w-full h-full object-contain" loading="lazy" />
+                {product.fileType === '3d' ? (
+                  <iframe src={product.url} className="w-full h-full border-0 pointer-events-none" />
+                ) : (
+                  <img src={product.url} alt={product.name} className="w-full h-full object-contain" loading="lazy" />
+                )}
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 transition-opacity">
                   <button onClick={() => handleEdit(product)} className="bg-white/20 hover:bg-white/40 p-2 rounded-full text-white cursor-pointer"><Edit2 className="w-4 h-4" /></button>
                   <button onClick={() => { if(confirm(t('adminProducts.deleteConfirm'))) deleteProduct(product.id) }} className="bg-red-500/80 hover:bg-red-500 p-2 rounded-full text-white cursor-pointer"><Trash2 className="w-4 h-4" /></button>
