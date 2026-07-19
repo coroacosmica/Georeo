@@ -6,11 +6,7 @@ export interface PageStat {
   views: number;
 }
 
-export interface TrafficPoint {
-  time: string;
-  visitors: number;
-}
-
+interface AnalyticsState {
   pageViews: number;
   uniqueVisitors: number;
   topPages: PageStat[];

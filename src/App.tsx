@@ -38,7 +38,7 @@ function MainApp() {
   
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   useEffect(() => {
     if (settings?.storeName) {

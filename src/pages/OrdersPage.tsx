@@ -11,7 +11,7 @@ export default function OrdersPage() {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [fetchOrders]);
 
   const exportToExcel = () => {
     const data = orders.map(order => ({

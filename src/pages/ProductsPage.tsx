@@ -12,7 +12,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const handleEdit = (product: any) => {
     setIsEditing(product.id);
