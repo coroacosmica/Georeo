@@ -33,6 +33,14 @@ export interface AdminProduct {
   fileType?: 'image' | '3d';
 }
 
+export interface AdminSettings {
+  storeName: string;
+  contactEmail: string;
+  whatsappNumber: string;
+  enableWhatsapp: boolean;
+  emailAlerts: boolean;
+}
+
 interface AdminStore {
   orders: AdminOrder[];
   fetchOrders: () => Promise<void>;
@@ -49,6 +57,9 @@ interface AdminStore {
   isAuthenticated: boolean;
   login: (password: string) => boolean;
   logout: () => void;
+  
+  settings: AdminSettings;
+  updateSettings: (newSettings: Partial<AdminSettings>) => void;
 }
 
 export const useAdminStore = create<AdminStore>()(
@@ -193,6 +204,17 @@ export const useAdminStore = create<AdminStore>()(
         return false;
       },
       logout: () => set({ isAuthenticated: false }),
+
+      settings: {
+        storeName: 'Georeo Safety',
+        contactEmail: 'sales@georeo.com',
+        whatsappNumber: '+20 100 000 0000',
+        enableWhatsapp: true,
+        emailAlerts: true,
+      },
+      updateSettings: (newSettings) => set((state) => ({
+        settings: { ...state.settings, ...newSettings }
+      })),
 
     }),
     {

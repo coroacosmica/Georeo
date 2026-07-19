@@ -7,7 +7,7 @@ export default function ProductsPage() {
   const { products, addProduct, updateProduct, deleteProduct, fetchProducts } = useAdminStore();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<{name: string, price: number, url: string, fileType?: 'image'|'3d'}>({ name: '', price: 0, url: '', fileType: 'image' });
+  const [editForm, setEditForm] = useState<{name: string, price: number, url: string, fileType?: 'image'|'3d', fileName?: string}>({ name: '', price: 0, url: '', fileType: 'image' });
   const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function ProductsPage() {
       const is3D = file.name.endsWith('.html') || file.name.endsWith('.glb');
       const reader = new FileReader();
       reader.onloadend = () => {
-        setEditForm({ ...editForm, url: reader.result as string, fileType: is3D ? '3d' : 'image' });
+        setEditForm({ ...editForm, url: reader.result as string, fileType: is3D ? '3d' : 'image', fileName: file.name });
       };
       reader.readAsDataURL(file);
     }
@@ -76,9 +76,23 @@ export default function ProductsPage() {
           <div className="flex-1 min-w-[200px]">
             <label className="block text-xs text-safety-light/70 mb-1">{t('adminProducts.formImage')} (Image or 3D .html)</label>
             <div className="flex gap-2">
-              <input type="text" value={editForm.url} onChange={e => setEditForm({...editForm, url: e.target.value})} placeholder="URL or Base64" className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white text-xs" />
+              <input 
+                type="text" 
+                value={editForm.url.startsWith('data:') ? (editForm.fileName || 'Local file uploaded') : editForm.url} 
+                onChange={e => {
+                  if (!editForm.url.startsWith('data:')) {
+                    setEditForm({...editForm, url: e.target.value});
+                  }
+                }}
+                disabled={editForm.url.startsWith('data:')}
+                placeholder="URL or Base64" 
+                className={`w-full border border-safety-gray/50 rounded px-3 py-2 text-white text-xs ${editForm.url.startsWith('data:') ? 'bg-safety-gray/20 cursor-not-allowed' : 'bg-black'}`} 
+              />
               <input type="file" accept="image/*,.html,.glb" onChange={handleImageUpload} className="w-full bg-black border border-safety-gray/50 rounded p-1 text-white text-xs" />
             </div>
+            {editForm.url.startsWith('data:') && (
+              <button onClick={() => setEditForm({...editForm, url: '', fileName: undefined})} className="text-xs text-red-500 hover:text-red-400 mt-1 cursor-pointer">Clear File</button>
+            )}
           </div>
           <div className="flex gap-2">
             <button onClick={handleAdd} className="bg-green-600 text-white px-4 py-2 rounded font-bold">{t('adminProducts.save')}</button>
@@ -111,7 +125,23 @@ export default function ProductsPage() {
                 <div className="p-3 border-t border-safety-gray/50 flex flex-col gap-2">
                   <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="w-full bg-black text-xs text-white p-1 rounded" />
                   <input type="number" value={editForm.price} onChange={e => setEditForm({...editForm, price: Number(e.target.value)})} className="w-full bg-black text-xs text-white p-1 rounded" />
-                  <input type="text" value={editForm.url} onChange={e => setEditForm({...editForm, url: e.target.value})} className="w-full bg-black text-xs text-white p-1 rounded" placeholder="Image URL" />
+                  
+                  <div className="flex flex-col gap-1">
+                    <input 
+                      type="text" 
+                      value={editForm.url.startsWith('data:') ? (editForm.fileName || 'Local file uploaded') : editForm.url} 
+                      onChange={e => {
+                        if (!editForm.url.startsWith('data:')) {
+                          setEditForm({...editForm, url: e.target.value});
+                        }
+                      }}
+                      disabled={editForm.url.startsWith('data:')}
+                      className={`w-full text-xs text-white p-1 rounded ${editForm.url.startsWith('data:') ? 'bg-safety-gray/20 cursor-not-allowed' : 'bg-black'}`} 
+                      placeholder="Image URL" 
+                    />
+                    <input type="file" accept="image/*,.html,.glb" onChange={handleImageUpload} className="w-full bg-black text-[10px] text-white p-1 rounded" />
+                  </div>
+
                   <div className="flex gap-2 mt-1">
                     <button onClick={() => handleSave(product.id)} className="bg-green-600 text-white text-xs px-2 py-1 rounded w-full">{t('adminProducts.save')}</button>
                     <button onClick={() => setIsEditing(null)} className="bg-safety-gray text-white text-xs px-2 py-1 rounded w-full">{t('adminProducts.cancel')}</button>
