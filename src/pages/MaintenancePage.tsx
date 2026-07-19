@@ -1,5 +1,5 @@
 import { useAdminStore } from '../store/useAdminStore';
-import { Settings, ShieldAlert } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 
 export default function MaintenancePage() {
   const { settings } = useAdminStore();

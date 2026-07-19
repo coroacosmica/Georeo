@@ -1,6 +1,5 @@
 import { useAdminStore } from '../store/useAdminStore';
 import { useAnalyticsStore } from '../store/useAnalyticsStore';
-import { ALL_LABELS } from '../data/labels';
 import { useTranslation } from '../lib/i18n/translations';
 export default function Dashboard() {
   const { orders, products } = useAdminStore();
