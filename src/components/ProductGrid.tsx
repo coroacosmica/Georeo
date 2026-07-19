@@ -10,12 +10,11 @@ const PRODUCTS = [
   { id: 2, title: "Hazmat Protocol", size: "1800x1200mm", modelUrl: "/models/site_safety_board_1800x1200_3d.html" },
 ];
 
-function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
+function ProductCard({ product, isCustomizing, onToggleCustomize }: { product: typeof PRODUCTS[0], isCustomizing: boolean, onToggleCustomize: (val: boolean) => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
-  const [isCustomizing, setIsCustomizing] = useState(false);
   const [selectedLabels, setSelectedLabels] = useState<AdminProduct[]>([]);
   const [customNote, setCustomNote] = useState("");
   const { addItem } = useCartStore();
@@ -70,7 +69,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
       image: selectedLabels[0]?.url || '/images/Georeo-bk.png'
     });
     toast.success(`${product.title} added to your cart!`);
-    setIsCustomizing(false);
+    onToggleCustomize(false);
     setCustomNote("");
   };
 
@@ -147,7 +146,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
                   {t('sign.3d')}
                 </div>
                 <button 
-                  onClick={() => setIsCustomizing(!isCustomizing)}
+                  onClick={() => onToggleCustomize(!isCustomizing)}
                   className="inline-flex items-center text-xs font-safetyMono text-safety-dark bg-safety-orange px-3 py-1 rounded hover:bg-yellow-500 transition-colors cursor-pointer"
                 >
                   <svg className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
@@ -218,6 +217,8 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
 
 export default function ProductGrid() {
   const { t } = useTranslation();
+  const [customizingId, setCustomizingId] = useState<number | null>(null);
+
   return (
     <section id="products" className="py-24 bg-safety-dark">
       <div className="container mx-auto px-6">
@@ -242,7 +243,7 @@ export default function ProductGrid() {
               whileInView={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, delay: i * 0.2, type: "spring", bounce: 0.4 }}
-              className="relative"
+              className={`relative ${customizingId === product.id ? 'z-50' : 'z-10'}`}
             >
               {/* Outer pulsing glow */}
               <motion.div 
@@ -250,7 +251,11 @@ export default function ProductGrid() {
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -inset-2 bg-gradient-to-r from-safety-orange via-yellow-500 to-safety-orange rounded-[20%] blur-xl opacity-50 -z-10" 
               />
-              <ProductCard product={product} />
+              <ProductCard 
+                product={product} 
+                isCustomizing={customizingId === product.id}
+                onToggleCustomize={(val) => setCustomizingId(val ? product.id : null)}
+              />
             </motion.div>
           ))}
         </div>
