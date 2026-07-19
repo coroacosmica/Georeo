@@ -197,6 +197,33 @@ export const useAdminStore = create<AdminStore>()(
     }),
     {
       name: 'georeo-admin-storage',
+      version: 2,
+      migrate: (persistedState: any, version: number) => {
+        if (version < 2) {
+          // Fix duplicate IDs and duplicate URLs
+          const seenIds = new Set();
+          const seenUrls = new Set();
+          
+          if (persistedState.products) {
+            // First, filter out duplicate URLs (keep only the first one)
+            const uniqueProducts = persistedState.products.filter((p: any) => {
+              if (seenUrls.has(p.url)) return false;
+              seenUrls.add(p.url);
+              return true;
+            });
+
+            // Then, ensure all IDs are unique
+            persistedState.products = uniqueProducts.map((p: any) => {
+              if (seenIds.has(p.id)) {
+                return { ...p, id: `${p.id}-${Math.random().toString(36).substr(2, 9)}` };
+              }
+              seenIds.add(p.id);
+              return p;
+            });
+          }
+        }
+        return persistedState;
+      }
     }
   )
 );
