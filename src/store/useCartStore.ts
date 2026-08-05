@@ -6,7 +6,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image?: string;
-  type: '3D_BOARD' | 'STANDARD_LABEL';
+  type: '3D_BOARD' | 'STANDARD_LABEL' | 'CATALOG_ITEM';
   customLabel?: string; // For customized 3D boards
   customNote?: string; // For protocol hazmat notes
   size?: string;

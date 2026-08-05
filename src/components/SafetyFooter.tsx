@@ -5,35 +5,37 @@ export default function SafetyFooter() {
   const { t } = useTranslation();
   const { settings } = useAdminStore();
   return (
-    <footer className="bg-safety-panel pt-20 pb-10 border-t border-safety-gray/20">
-      <div className="container mx-auto px-6">
+    <footer className="bg-black pt-20 pb-10 border-t border-safety-red/40 relative overflow-hidden scanline">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,0,51,0.03)_0%,_transparent_100%)] pointer-events-none" />
+      
+      <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 mb-12">
           
           <div className="flex flex-col items-center md:items-start">
             <a href="/" className="flex items-center group mb-4">
-              <div className="relative h-12 w-48 transition-transform duration-300 group-hover:scale-105">
+              <div className="relative h-12 w-48 transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_0_10px_rgba(255,0,51,0.3)]">
                 <img src="/images/Georeo-bk.png" alt="Georeo Logo" className="w-full h-full object-contain object-left md:object-left" />
               </div>
             </a>
-            <p className="text-safety-light/50 font-safetySans text-sm max-w-xs text-center md:text-left mt-4">
+            <p className="text-safety-light/50 font-safetyMono text-xs max-w-xs text-center md:text-left mt-4 uppercase">
               {t('footer.company')}
             </p>
           </div>
           
           <div className="flex gap-12">
             <div className="flex flex-col">
-              <h4 className="font-safetyDisplay text-xl uppercase text-white mb-4">{t('footer.products')}</h4>
-              <ul className="flex flex-col gap-2 font-safetySans text-sm text-safety-light/60">
-                <li><a href="#products" className="hover:text-safety-orange transition-colors">{t('nav.products')}</a></li>
+              <h4 className="font-safetyMono text-lg uppercase text-safety-red mb-4 tracking-widest">[ {t('footer.products')} ]</h4>
+              <ul className="flex flex-col gap-2 font-safetyMono text-xs text-safety-light/60">
+                <li><a href="#products" className="hover:text-safety-red hover:drop-shadow-[0_0_5px_rgba(255,0,51,0.8)] transition-all duration-300">{t('nav.products')}</a></li>
               </ul>
             </div>
             <div className="flex flex-col">
-              <h4 className="font-safetyDisplay text-xl uppercase text-white mb-4">{t('footer.contact')}</h4>
-              <ul className="flex flex-col gap-3 font-safetySans text-sm text-safety-light/70">
+              <h4 className="font-safetyMono text-lg uppercase text-safety-red mb-4 tracking-widest">[ {t('footer.contact')} ]</h4>
+              <ul className="flex flex-col gap-3 font-safetyMono text-xs text-safety-light/70">
                 {settings?.contactEmail && settings.contactEmail.trim() !== '' && (
                   <li className="flex items-center gap-3">
-                    <span className="w-16">Email:</span>
-                    <a href={`mailto:${settings.contactEmail}`} className="hover:text-safety-orange transition-colors font-safetyMono">
+                    <span className="w-16 text-safety-red/70">EMAIL:</span>
+                    <a href={`mailto:${settings.contactEmail}`} className="hover:text-safety-red hover:drop-shadow-[0_0_5px_rgba(255,0,51,0.8)] transition-all duration-300">
                       {settings.contactEmail}
                     </a>
                   </li>
@@ -41,18 +43,15 @@ export default function SafetyFooter() {
                 
                 {settings?.whatsappNumber && settings.whatsappNumber.trim() !== '' && (
                   <li className="flex items-center gap-3">
-                    <span className="w-16">WhatsApp:</span>
+                    <span className="w-16 text-safety-red/70">COMMS:</span>
                     <a 
                       href={`https://wa.me/${settings.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20Georeo%20Safety,%20I%27m%20interested%20in%20your%20safety%20boards%20and%20labels.`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 hover:text-[#25D366] transition-colors group"
-                      title="Chat on WhatsApp"
+                      className="flex items-center gap-2 hover:text-safety-red hover:drop-shadow-[0_0_5px_rgba(255,0,51,0.8)] transition-all duration-300 group"
+                      title="Secure Comm Channel"
                     >
-                      <span className="font-safetyMono" dir="ltr">{settings.whatsappNumber}</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-safety-light/40 group-hover:text-[#25D366] transition-colors">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
-                      </svg>
+                      <span className="font-safetyMono uppercase" dir="ltr">{settings.whatsappNumber}</span>
                     </a>
                   </li>
                 )}
@@ -61,11 +60,11 @@ export default function SafetyFooter() {
           </div>
         </div>
         
-        <div className="pt-8 border-t border-safety-gray/30 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-safetyMono text-safety-light/40">
-          <div>&copy; {new Date().getFullYear()} {settings?.storeName || 'Georeo'}. {t('footer.rights')}</div>
+        <div className="pt-8 border-t border-safety-red/20 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-safetyMono text-safety-light/30">
+          <div>&gt; SYSTEM_ID: {new Date().getFullYear()} {settings?.storeName || 'GEOREO'}. {t('footer.rights')}</div>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-safety-orange transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-safety-orange transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-safety-red transition-colors">[ PRIVACY_PROTOCOL ]</a>
+            <a href="#" className="hover:text-safety-red transition-colors">[ TERMS_OF_SERVICE ]</a>
           </div>
         </div>
       </div>

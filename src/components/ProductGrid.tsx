@@ -4,6 +4,7 @@ import { useCartStore } from '../store/useCartStore';
 import { useAdminStore, type AdminProduct } from '../store/useAdminStore';
 import { toast } from "sonner";
 import { useTranslation } from '../lib/i18n/translations';
+import { MetalButton } from './ui/button';
 
 const PRODUCTS = [
   { id: 1, title: "Standard Site Safety", size: "1200x900mm", modelUrl: "/models/site_safety_board_3d_with_upload.html" },
@@ -114,7 +115,7 @@ function ProductCard({ product, isCustomizing, onToggleCustomize }: { product: t
       >
         {/* Hexagon-cut card */}
         <div 
-          className="absolute inset-0 bg-safety-panel border border-safety-gray overflow-hidden"
+          className="absolute inset-0 bg-safety-panel/80 backdrop-blur-sm border-2 border-safety-red/40 overflow-hidden shadow-[0_0_30px_rgba(255,0,51,0.2)]"
           style={{ clipPath: "polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%)" }}
         >
           {/* 3D Model iframe */}
@@ -130,41 +131,44 @@ function ProductCard({ product, isCustomizing, onToggleCustomize }: { product: t
             )}
           </div>
           
+          {/* Scanline overlay for cards */}
+          <div className="absolute inset-0 scanline pointer-events-none opacity-50 mix-blend-overlay" />
+          
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-safety-dark via-safety-dark/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-safety-dark/90 via-safety-dark/50 to-transparent pointer-events-none" />
           
           {/* Content */}
           <div className="absolute bottom-0 left-0 p-6 w-full pointer-events-none flex flex-col justify-end" style={{ transform: "translateZ(30px)" }}>
             <div className="flex justify-between items-end mb-2">
-              <div className="font-safetyMono text-safety-orange text-xs">{t('sign.spec')}: {product.size}</div>
+              <div className="font-safetyMono text-safety-red text-xs">{t('sign.spec')}: {product.size}</div>
             </div>
             <h3 className="font-safetyDisplay text-3xl uppercase text-white leading-none">{product.title}</h3>
             {product.modelUrl && (
               <div className="mt-3 flex flex-wrap items-center gap-3 pointer-events-auto">
-                <div className="inline-flex items-center text-xs font-safetyMono text-safety-orange bg-safety-orange/10 px-2 py-1 rounded border border-safety-orange/30">
+                <div className="inline-flex items-center text-xs font-safetyMono text-safety-red bg-safety-red/10 px-2 py-1 rounded border border-safety-red/30">
                   <svg className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                   {t('sign.3d')}
                 </div>
-                <button 
+                <MetalButton 
+                  variant="gold"
                   onClick={() => onToggleCustomize(!isCustomizing)}
-                  className="inline-flex items-center text-xs font-safetyMono text-safety-dark bg-safety-orange px-3 py-1 rounded hover:bg-yellow-500 transition-colors cursor-pointer"
                 >
-                  <svg className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+                  <svg className="w-4 h-4 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
                   {t('sign.customize')}
-                </button>
-                <button 
+                </MetalButton>
+                <MetalButton 
+                  variant="primary"
                   onClick={handleAddToCart}
-                  className="inline-flex items-center text-xs font-safetyMono text-white bg-safety-dark px-3 py-1 rounded hover:bg-black transition-colors cursor-pointer border border-safety-gray/50"
                 >
-                  <svg className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  <svg className="w-4 h-4 mr-1 rtl:ml-1 rtl:mr-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                   {t('labels.addToCart')}
-                </button>
+                </MetalButton>
               </div>
             )}
           </div>
           
           {/* Top-right accent */}
-          <div className="absolute top-4 right-4 text-safety-gray group-hover:text-safety-orange transition-colors duration-300 pointer-events-none" style={{ transform: "translateZ(20px)" }}>
+          <div className="absolute top-4 right-4 text-safety-gray group-hover:text-safety-red transition-colors duration-300 pointer-events-none" style={{ transform: "translateZ(20px)" }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -191,7 +195,7 @@ function ProductCard({ product, isCustomizing, onToggleCustomize }: { product: t
               <button 
                 key={label.id}
                 onClick={() => applyTexture(label)}
-                className={`aspect-square bg-black border ${selectedLabels.some(l => l.url === label.url) ? 'border-safety-orange ring-2 ring-safety-orange/50' : 'border-safety-gray/50 hover:border-safety-orange'} rounded overflow-hidden transition-all cursor-pointer p-1`}
+                className={`aspect-square bg-black border ${selectedLabels.some(l => l.url === label.url) ? 'border-safety-red ring-2 ring-safety-red/50' : 'border-safety-gray/50 hover:border-safety-red'} rounded overflow-hidden transition-all cursor-pointer p-1`}
                 title={label.name}
               >
                 <img src={label.url} alt={label.name} className="w-full h-full object-contain" loading="lazy" />
@@ -205,7 +209,7 @@ function ProductCard({ product, isCustomizing, onToggleCustomize }: { product: t
               value={customNote}
               onChange={(e) => setCustomNote(e.target.value)}
               placeholder={t('sign.notesPlaceholder')}
-              className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white focus:outline-none focus:border-safety-orange transition-colors text-sm resize-none"
+              className="w-full bg-black border border-safety-gray/50 rounded px-3 py-2 text-white focus:outline-none focus:border-safety-red transition-colors text-sm resize-none"
               rows={2}
             />
           </div>
@@ -220,8 +224,9 @@ export default function ProductGrid() {
   const [customizingId, setCustomizingId] = useState<number | null>(null);
 
   return (
-    <section id="products" className="py-24 bg-safety-dark">
-      <div className="container mx-auto px-6">
+    <section id="products" className="py-24 bg-transparent relative overflow-hidden scanline">
+      <div className="absolute inset-0 bg-black/40 pointer-events-none z-0" />
+      <div className="container mx-auto px-6 relative z-10">
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -249,7 +254,7 @@ export default function ProductGrid() {
               <motion.div 
                 animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.02, 1] }} 
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -inset-2 bg-gradient-to-r from-safety-orange via-yellow-500 to-safety-orange rounded-[20%] blur-xl opacity-50 -z-10" 
+                className="absolute -inset-2 bg-gradient-to-r from-safety-red via-yellow-500 to-safety-red rounded-[20%] blur-xl opacity-50 -z-10" 
               />
               <ProductCard 
                 product={product} 

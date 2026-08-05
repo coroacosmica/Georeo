@@ -31,10 +31,10 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex text-safety-light selection:bg-safety-orange selection:text-white font-safetySans">
+    <div className="min-h-screen bg-gray-50 flex text-gray-900 selection:bg-[#FF8C00] selection:text-black font-publicSans">
       {/* Sidebar */}
-      <aside className="w-64 bg-safety-dark border-r border-safety-gray/30 flex flex-col">
-        <div className="p-6 border-b border-safety-gray/30 flex items-center justify-center">
+      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col relative">
+        <div className="p-6 border-b border-gray-100 flex items-center justify-center">
           <Link to="/">
             <img src="/images/Georeo-bk.png" alt="Georeo" className="h-12 object-contain hover:scale-105 transition-transform" />
           </Link>
@@ -48,10 +48,10 @@ export default function AdminLayout() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 font-bold uppercase text-sm tracking-widest ${
                   isActive 
-                    ? 'bg-safety-orange text-safety-dark font-bold' 
-                    : 'text-safety-light/70 hover:bg-white/5 hover:text-white'
+                    ? 'bg-[#FF8C00] text-black shadow-sm' 
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-black'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -61,12 +61,12 @@ export default function AdminLayout() {
           })}
         </nav>
 
-        <div className="p-4 border-t border-safety-gray/30 space-y-2">
-          <button onClick={toggleLanguage} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-safety-light hover:bg-white/5 hover:text-white transition-colors cursor-pointer">
+        <div className="p-4 border-t border-gray-100 space-y-2">
+          <button onClick={toggleLanguage} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 font-bold hover:bg-gray-100 hover:text-black transition-colors cursor-pointer text-sm uppercase tracking-widest">
             <Globe className="w-5 h-5" />
             {t('nav.language')}
           </button>
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 font-bold hover:bg-red-50 transition-colors cursor-pointer text-sm uppercase tracking-widest">
             <LogOut className="w-5 h-5" />
             {t('admin.logout')}
           </button>
@@ -74,7 +74,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto bg-gradient-to-br from-safety-dark to-black">
+      <main className="flex-1 overflow-y-auto bg-gray-50 relative p-8">
         <Outlet />
       </main>
     </div>

@@ -1,20 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&family=Archivo:wght@400;600;700;800&family=Public+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-safety-dark: #0A0C0F;
-  --color-safety-orange: #F2661E;
-  --color-safety-gray: #3A3D42;
-  --color-safety-panel: #1E2024;
-  --color-safety-light: #E2E8F0;
+  --color-safety-dark: #07090C;
+  --color-safety-red: #FF0033;
+  --color-safety-gray: #2A2D32;
+  --color-safety-panel: #111318;
+  --color-safety-light: #F0F4F8;
   
   --font-safetyDisplay: 'Bebas Neue', sans-serif;
   --font-safetySans: 'Inter', system-ui, sans-serif;
   --font-safetyMono: 'JetBrains Mono', monospace;
+  --font-archivo: 'Archivo', sans-serif;
+  --font-publicSans: 'Public Sans', sans-serif;
+}
+
+@layer utilities {
+  .scanline {
+    position: relative;
+  }
+  .scanline::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+  }
+
 }
 
 @layer base {
   body {
     @apply bg-safety-dark text-safety-light font-safetySans overflow-x-hidden antialiased;
   }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.fade-in-subtitle {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.explore-btn {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  z-index: 50;
+  cursor: pointer;
+}
+
+.explore-arrow {
+  margin-top: 0.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(5px); }
+}
+
+.safety-accent {
+  background-color: var(--safety-orange, #FF8C00);
+}
+
+.diagonal-banner {
+  transform: skewY(-1deg);
+}
+
+.diagonal-banner > div {
+  transform: skewY(1deg);
+}
+
+.hero-gradient {
+  background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
 }

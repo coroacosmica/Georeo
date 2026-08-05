@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAdminStore } from '../store/useAdminStore';
-import { Lock, AlertCircle, Globe } from 'lucide-react';
+import { Lock, AlertCircle, Globe, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../lib/i18n/translations';
 import { useLanguageStore } from '../store/useLanguageStore';
@@ -24,60 +24,90 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-safety-dark flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Decorative background */}
-      <div className="absolute inset-0 pointer-events-none opacity-20"
-        style={{
-          backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 10px, #ff5722 10px, #ff5722 20px)'
-        }}
-      />
-      
-      <div className="bg-black/90 p-8 rounded-2xl border-2 border-safety-orange w-full max-w-md relative z-10 backdrop-blur-sm shadow-2xl">
+    <div className="min-h-screen bg-white flex font-publicSans">
+      {/* Left Panel - Image Cover */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-black items-center justify-center overflow-hidden">
+        <img 
+          src="/images/placeholders/hero_bg.png" 
+          alt="Industrial Safety" 
+          className="absolute inset-0 w-full h-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        
+        <div className="relative z-10 p-12 flex flex-col items-center text-center max-w-lg">
+          <div className="w-20 h-20 bg-[#FF8C00] rounded-full flex items-center justify-center mb-8 shadow-xl">
+            <ShieldCheck className="w-10 h-10 text-black" />
+          </div>
+          <h2 className="text-4xl font-archivo font-black text-white uppercase tracking-wider leading-tight mb-4">
+            Georeo Safety<br/>Management
+          </h2>
+          <p className="text-gray-300 font-medium">
+            Access your industrial dashboard to manage products, orders, and safety equipment efficiently.
+          </p>
+        </div>
+      </div>
+
+      {/* Right Panel - Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative">
         <button 
           onClick={toggleLanguage}
-          className="absolute top-4 right-4 text-safety-light/50 hover:text-white transition-colors cursor-pointer flex items-center gap-2 text-sm"
+          className="absolute top-8 right-8 text-gray-400 hover:text-black transition-colors cursor-pointer flex items-center gap-2 text-sm font-bold uppercase tracking-widest bg-gray-50 px-4 py-2 rounded-sm border border-gray-200"
         >
           <Globe className="w-4 h-4" />
+          <span>EN / AR</span>
         </button>
 
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-safety-orange/20 rounded-full flex items-center justify-center mb-4">
-            <Lock className="w-8 h-8 text-safety-orange" />
-          </div>
-          <h1 className="text-3xl font-safetyDisplay text-white uppercase tracking-wider">{t('login.title')}</h1>
-          <p className="text-safety-light/60 font-safetyMono text-sm mt-2">{t('login.subtitle')}</p>
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div>
-            <label className="block text-safety-orange font-safetyMono text-sm mb-2 uppercase">{t('login.accessCode')}</label>
-            <input 
-              type="password" 
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError(false);
-              }}
-              className="w-full bg-safety-dark border-2 border-safety-gray/50 focus:border-safety-orange rounded-lg px-4 py-3 text-white font-safetyMono focus:outline-none transition-colors"
-              placeholder="••••••••"
-              autoFocus
-            />
+        <div className="w-full max-w-md">
+          <div className="flex flex-col items-center mb-10">
+            <img src="/images/Georeo-bk.png" alt="Georeo Logo" className="h-16 object-contain mb-8" />
+            
+            <h1 className="text-3xl font-archivo font-black text-black uppercase tracking-wider mb-2">{t('login.title')}</h1>
+            <p className="text-gray-500 font-medium text-sm text-center">{t('login.subtitle')}</p>
           </div>
 
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 flex items-center gap-2 text-red-500 text-sm font-safetyMono">
-              <AlertCircle className="w-4 h-4" />
-              <span>{t('login.error')}</span>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label className="block text-gray-700 font-bold text-xs mb-2 uppercase tracking-widest">{t('login.accessCode')} (georeo2026)</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError(false);
+                  }}
+                  className="w-full bg-gray-50 border-2 border-gray-200 focus:border-[#FF8C00] rounded-sm pl-11 pr-4 py-4 text-black font-bold focus:outline-none transition-colors"
+                  placeholder="Enter access code..."
+                  autoFocus
+                />
+              </div>
             </div>
-          )}
 
-          <button 
-            type="submit"
-            className="w-full bg-safety-orange hover:bg-orange-600 text-black font-safetyDisplay text-xl uppercase py-4 rounded-lg transition-colors cursor-pointer"
-          >
-            {t('login.submit')}
-          </button>
-        </form>
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-sm p-4 flex items-center gap-3 text-red-600 text-sm font-bold animate-in fade-in slide-in-from-top-2">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span>{t('login.error')}</span>
+              </div>
+            )}
+
+            <button 
+              type="submit"
+              className="w-full bg-[#FF8C00] hover:bg-black hover:text-[#FF8C00] text-black font-black text-lg uppercase py-4 rounded-sm transition-all duration-300 cursor-pointer shadow-sm flex items-center justify-center gap-2 group"
+            >
+              <span>{t('login.submit')}</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+          </form>
+
+          <div className="mt-12 text-center">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+              © {new Date().getFullYear()} Georeo Safety Systems
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

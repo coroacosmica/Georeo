@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useAdminStore } from '../store/useAdminStore';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Download } from 'lucide-react';
+import { ShoppingCart, Download, PackageOpen } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { useTranslation } from '../lib/i18n/translations';
 
@@ -36,98 +36,104 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="font-safetyDisplay text-3xl text-white uppercase">{t('orders.title')}</h1>
+    <div className="font-publicSans">
+      <div className="flex justify-between items-center mb-8 relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-8 bg-[#FF8C00]" />
+          <h1 className="font-archivo font-black text-3xl text-black uppercase tracking-widest">{t('orders.title')}</h1>
+        </div>
         <div className="flex gap-4">
           <button 
+            className="bg-white border border-gray-200 text-black px-4 py-2 hover:bg-gray-50 flex items-center gap-2 text-sm font-bold shadow-sm transition-colors"
             onClick={exportToExcel}
-            className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors cursor-pointer text-sm font-safetySans"
           >
             <Download className="w-4 h-4" /> Export to Excel
           </button>
-          <div className="bg-safety-panel px-4 py-2 rounded-lg border border-safety-gray/50 flex items-center gap-2">
-            <ShoppingCart className="w-5 h-5 text-safety-orange" />
-            <span className="text-white font-safetyMono font-bold">{orders.length}</span>
-            <span className="text-safety-light/70 text-sm">{t('orders.totalItems')}</span>
+          <div className="bg-white px-4 py-2 border border-gray-200 flex items-center gap-3 shadow-sm">
+            <ShoppingCart className="w-5 h-5 text-gray-500" />
+            <span className="text-black font-black text-lg">{orders.length}</span>
+            <span className="text-gray-400 text-xs uppercase tracking-widest">{t('orders.totalItems')}</span>
           </div>
         </div>
       </div>
 
       {orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64 bg-safety-panel rounded-xl border border-safety-gray/50">
-          <ShoppingCart className="w-16 h-16 text-safety-light/20 mb-4" />
-          <p className="font-safetySans text-safety-light/50">{t('orders.noOrders')}</p>
+        <div className="flex flex-col items-center justify-center h-64 bg-white border border-gray-200 shadow-sm">
+          <PackageOpen className="w-16 h-16 text-gray-300 mb-4" />
+          <p className="font-bold text-gray-400 tracking-widest uppercase">{t('orders.noOrders')}</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-6 relative z-10">
           {orders.map((order, i) => (
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               key={order.id} 
-              className="bg-safety-panel border border-safety-gray/50 rounded-xl overflow-hidden"
+              className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
             >
+              
               {/* Order Header */}
-              <div className="bg-black/30 p-4 border-b border-safety-gray/50 flex flex-wrap justify-between items-center gap-4">
-                <div>
-                  <h3 className="font-safetyMono text-lg text-safety-orange font-bold">{order.id}</h3>
-                  <p className="text-sm text-safety-light/70">{order.date}</p>
+              <div className="bg-gray-50 p-4 border-b border-gray-200 flex flex-wrap justify-between items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div>
+                    <h3 className="font-black text-lg text-black tracking-widest">{order.id}</h3>
+                    <p className="text-xs text-gray-500 mt-1">{new Date(order.date).toLocaleString()}</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <select 
                     value={order.status}
                     onChange={(e) => updateOrderStatus(order.id, e.target.value as any)}
-                    className={`bg-black border rounded px-3 py-1.5 text-sm font-safetyMono outline-none ${
-                      order.status === 'Pending' ? 'border-yellow-500 text-yellow-500' :
-                      order.status === 'Confirmed' ? 'border-blue-500 text-blue-500' :
-                      order.status === 'Cancelled' ? 'border-red-500 text-red-500' :
-                      'border-green-500 text-green-500'
+                    className={`bg-white border px-3 py-1.5 text-xs font-bold tracking-widest uppercase outline-none cursor-pointer rounded-sm ${
+                      order.status === 'Pending' ? 'border-yellow-300 text-yellow-600' :
+                      order.status === 'Confirmed' ? 'border-blue-300 text-blue-600' :
+                      order.status === 'Cancelled' ? 'border-red-300 text-red-600' :
+                      'border-emerald-300 text-emerald-600'
                     }`}
                   >
-                    <option value="Pending">Pending</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Cancelled">Cancelled</option>
+                    <option value="Pending">PENDING</option>
+                    <option value="Confirmed">CONFIRMED</option>
+                    <option value="Shipped">SHIPPED</option>
+                    <option value="Cancelled">CANCELLED</option>
                   </select>
                   <button 
                     onClick={() => { if(confirm('Are you sure?')) deleteOrder(order.id) }}
-                    className="text-red-500 hover:text-red-400 text-sm font-bold uppercase cursor-pointer"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 text-xs font-bold uppercase tracking-widest transition-colors cursor-pointer px-3 py-1.5 border border-transparent hover:border-red-200 rounded-sm"
                   >
-                    Delete
+                    DELETE
                   </button>
                 </div>
               </div>
 
               <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Customer Details */}
-                <div className="space-y-3">
-                  <h4 className="font-safetyMono text-xs text-safety-light/50 uppercase border-b border-safety-gray/30 pb-2 mb-3">{t('orders.customerDetails')}</h4>
-                  <p className="text-white"><span className="text-safety-light/70 w-24 inline-block">{t('checkout.fullName')}:</span> {order.customer.fullName}</p>
-                  <p className="text-white"><span className="text-safety-light/70 w-24 inline-block">{t('orders.company')}:</span> {order.customer.company}</p>
-                  <p className="text-white"><span className="text-safety-light/70 w-24 inline-block">{t('orders.phone')}:</span> <span dir="ltr">{order.customer.phone}</span></p>
-                  <p className="text-white"><span className="text-safety-light/70 w-24 inline-block">{t('orders.email')}:</span> <span dir="ltr">{order.customer.email}</span></p>
-                  <p className="text-white"><span className="text-safety-light/70 w-24 inline-block">{t('orders.address')}:</span> {order.customer.address}, {order.customer.country}</p>
+                <div className="space-y-3 text-sm">
+                  <h4 className="text-xs font-black text-black tracking-widest uppercase border-b border-gray-100 pb-2 mb-4">{t('orders.customerDetails')}</h4>
+                  <p className="text-gray-700"><span className="text-gray-400 w-24 inline-block tracking-widest text-xs uppercase">{t('checkout.fullName')}:</span> {order.customer.fullName}</p>
+                  <p className="text-gray-700"><span className="text-gray-400 w-24 inline-block tracking-widest text-xs uppercase">{t('orders.company')}:</span> {order.customer.company}</p>
+                  <p className="text-gray-700"><span className="text-gray-400 w-24 inline-block tracking-widest text-xs uppercase">{t('orders.phone')}:</span> <span dir="ltr">{order.customer.phone}</span></p>
+                  <p className="text-gray-700"><span className="text-gray-400 w-24 inline-block tracking-widest text-xs uppercase">{t('orders.email')}:</span> <span dir="ltr">{order.customer.email}</span></p>
+                  <p className="text-gray-700"><span className="text-gray-400 w-24 inline-block tracking-widest text-xs uppercase">{t('orders.address')}:</span> {order.customer.address}, {order.customer.country}</p>
                   {(order.customer.uploadedDesign || order.customer.uploadedLogo) && (
-                    <div className="mt-4 grid grid-cols-2 gap-4">
+                    <div className="mt-6 grid grid-cols-2 gap-4">
                       {order.customer.uploadedDesign && (
-                        <div className="border border-dashed border-safety-gray/50 rounded-lg p-2 bg-black/20 text-center">
-                          <p className="text-xs text-safety-light/50 uppercase mb-2">Uploaded Design</p>
+                        <div className="border border-dashed border-gray-300 p-2 bg-gray-50 text-center relative group rounded-sm">
+                          <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-bold">Design</p>
                           {order.customer.uploadedDesign.startsWith('data:image') ? (
-                            <img src={order.customer.uploadedDesign} alt="Uploaded Design" className="max-h-32 mx-auto rounded" />
+                            <img src={order.customer.uploadedDesign} alt="Uploaded Design" className="max-h-24 mx-auto opacity-80 group-hover:opacity-100 transition-opacity" />
                           ) : (
-                            <a href={order.customer.uploadedDesign} download="custom_design" className="text-safety-orange underline text-sm">Download File</a>
+                            <a href={order.customer.uploadedDesign} download="custom_design" className="text-[#FF8C00] text-[10px] uppercase font-bold hover:underline">[ DOWNLOAD ]</a>
                           )}
                         </div>
                       )}
                       {order.customer.uploadedLogo && (
-                        <div className="border border-dashed border-safety-gray/50 rounded-lg p-2 bg-black/20 text-center">
-                          <p className="text-xs text-safety-light/50 uppercase mb-2">Uploaded Logo</p>
+                        <div className="border border-dashed border-gray-300 p-2 bg-gray-50 text-center relative group rounded-sm">
+                          <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-bold">Logo</p>
                           {order.customer.uploadedLogo.startsWith('data:image') ? (
-                            <img src={order.customer.uploadedLogo} alt="Uploaded Logo" className="max-h-32 mx-auto rounded" />
+                            <img src={order.customer.uploadedLogo} alt="Uploaded Logo" className="max-h-24 mx-auto opacity-80 group-hover:opacity-100 transition-opacity" />
                           ) : (
-                            <a href={order.customer.uploadedLogo} download="custom_logo" className="text-safety-orange underline text-sm">Download File</a>
+                            <a href={order.customer.uploadedLogo} download="custom_logo" className="text-[#FF8C00] text-[10px] uppercase font-bold hover:underline">[ DOWNLOAD ]</a>
                           )}
                         </div>
                       )}
@@ -136,29 +142,29 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Items */}
-                <div className="lg:col-span-2 space-y-3">
-                  <h4 className="font-safetyMono text-xs text-safety-light/50 uppercase border-b border-safety-gray/30 pb-2 mb-3">{t('orders.items')}</h4>
+                <div className="lg:col-span-2 space-y-3 text-sm">
+                  <h4 className="text-xs font-black text-black tracking-widest uppercase border-b border-gray-100 pb-2 mb-4">{t('orders.items')}</h4>
                   <div className="space-y-4">
                     {order.items.map((item, idx) => (
-                      <div key={idx} className="flex gap-4 items-center bg-black/20 p-3 rounded-lg border border-white/5">
-                        <div className="w-16 h-16 bg-black rounded border border-safety-gray/50 flex-shrink-0 p-1">
+                      <div key={idx} className="flex gap-4 items-center bg-gray-50 p-3 border border-gray-100 rounded-sm">
+                        <div className="w-16 h-16 bg-white flex-shrink-0 p-1 border border-gray-200">
                           {item.image && <img src={item.image} alt={item.name} className="w-full h-full object-contain" />}
                         </div>
                         <div className="flex-1">
-                          <h5 className="text-white font-bold">{item.name}</h5>
-                          <div className="flex gap-4 text-xs text-safety-light/70 mt-1">
-                            <span>Qty: {item.quantity}</span>
-                            <span>Type: {item.type}</span>
-                            {item.size && <span>Size: {item.size}</span>}
+                          <h5 className="text-gray-900 font-bold tracking-wider">{item.name}</h5>
+                          <div className="flex gap-4 text-[10px] text-gray-500 mt-2 uppercase tracking-widest font-bold">
+                            <span>QTY: {item.quantity}</span>
+                            <span>TYPE: {item.type}</span>
+                            {item.size && <span>SIZE: {item.size}</span>}
                           </div>
                           {item.customNote && (
-                            <div className="mt-2 text-xs bg-yellow-500/10 text-yellow-500 p-2 rounded border border-yellow-500/20">
-                              <span className="font-bold">Note:</span> {item.customNote}
+                            <div className="mt-3 text-[10px] bg-yellow-50 text-yellow-700 p-2 border border-yellow-200 uppercase tracking-widest rounded-sm">
+                              <span className="font-bold">NOTE:</span> {item.customNote}
                             </div>
                           )}
                         </div>
                         <div className="text-right">
-                          <div className="text-safety-orange font-safetyMono font-bold">0 {t('common.egp')}</div>
+                          <div className="text-black font-black tracking-widest">0 {t('common.egp')}</div>
                         </div>
                       </div>
                     ))}

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { ShoppingCart, Menu, X, Globe } from 'lucide-react';
+import { Menu, X, Globe, Search, User, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { useTranslation } from '../lib/i18n/translations';
 import { useLanguageStore } from '../store/useLanguageStore';
@@ -13,71 +12,67 @@ export default function SafetyNavbar() {
   const toggleLanguage = useLanguageStore((state) => state.toggleLanguage);
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6"
-    >
-      <a href="/" className="flex items-center group">
-        <div className="relative h-20 w-72 transition-transform duration-300 group-hover:scale-105">
-          <img src="/images/Georeo-bk.png" alt="Georeo Logo" className="w-full h-full object-contain object-left" />
-        </div>
-      </a>
-      
-      <div className="flex items-center gap-4 md:gap-8">
-        <nav className="hidden md:flex items-center gap-6 font-safetyMono text-sm text-safety-light/70 rtl:space-x-reverse">
-          <a href="/#products" className="hover:text-safety-orange transition-colors">{t('nav.products')}</a>
-          <a href="/#features" className="hover:text-safety-orange transition-colors">{t('nav.services')}</a>
-        </nav>
+    <header className="bg-white text-gray-900 border-b border-gray-100 sticky top-0 z-50 font-publicSans">
+      <div className="max-w-[1440px] mx-auto px-6">
+        <div className="flex items-center justify-between h-28">
+          {/* Logo Section */}
+          <div className="flex items-center">
+            <a href="/" id="nav-logo-link" className="flex items-center pr-12">
+              <img src="/images/Georeo-bk.png" alt="GEOREO SAFETY" className="h-20 w-auto object-contain" />
+            </a>
+            {/* Navigation Menu */}
+            <nav className="hidden lg:flex items-center space-x-10 text-sm font-bold tracking-wider font-archivo rtl:space-x-reverse uppercase">
+              <a href="/" id="nav-home" className="hover:text-[#FF8C00] transition-colors">{t('nav.home') || 'HOME'}</a>
+              <a href="/#products" id="nav-shop" className="text-[#FF8C00] transition-colors">{t('nav.products') || 'SHOP'}</a>
+              <a href="/#features" id="nav-services" className="hover:text-[#FF8C00] transition-colors">{t('nav.services') || 'SERVICES'}</a>
+            </nav>
+          </div>
 
-        <div className="flex items-center gap-4 md:gap-6">
-          <button 
-            onClick={toggleLanguage}
-            className="hidden sm:flex items-center gap-2 font-safetyMono text-sm text-safety-light/70 hover:text-safety-orange transition-colors cursor-pointer"
-          >
-            <Globe className="w-4 h-4" />
-            {t('nav.language')}
-          </button>
-          
-          <button 
-            onClick={toggleCart}
-            className="relative text-white hover:text-safety-orange transition-colors cursor-pointer"
-          >
-            <ShoppingCart className="w-6 h-6" />
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-safety-orange text-safety-dark text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                {itemCount}
-              </span>
-            )}
-          </button>
-          <button 
-            onClick={toggleCart}
-            className="hidden sm:block px-6 py-2.5 bg-safety-orange hover:bg-orange-600 text-white font-bold tracking-wide text-sm uppercase rounded-md transition-colors duration-300 cursor-pointer"
-          >
-            {t('nav.getQuote')}
-          </button>
-          
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white hover:text-safety-orange transition-colors cursor-pointer">
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Right Search/Icons */}
+          <div className="flex items-center space-x-8 rtl:space-x-reverse">
+            <div className="hidden md:flex relative">
+              <input type="text" placeholder="What you looking for?" className="bg-gray-50 border border-gray-200 text-sm py-3 px-5 pr-12 w-72 focus:ring-1 focus:ring-[#FF8C00] focus:border-[#FF8C00] outline-none rounded-sm transition-all" />
+              <Search className="absolute right-4 top-3.5 text-gray-400 w-5 h-5" />
+            </div>
+            <div className="flex items-center space-x-5 text-2xl text-gray-700 rtl:space-x-reverse">
+              <button onClick={toggleLanguage} className="hover:text-[#FF8C00] transition-colors cursor-pointer flex items-center justify-center">
+                <Globe className="w-6 h-6" />
+              </button>
+              <a href="#" id="user-account" className="hover:text-[#FF8C00] transition-colors"><User className="w-6 h-6" /></a>
+              <button 
+                onClick={toggleCart} 
+                id="user-cart" 
+                className="hover:text-[#FF8C00] transition-colors relative cursor-pointer"
+              >
+                <ShoppingBag className="w-6 h-6" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#FF8C00] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </button>
+              <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden text-gray-700 hover:text-[#FF8C00] transition-colors cursor-pointer">
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 w-full bg-safety-panel border-t border-safety-gray md:hidden">
-          <div className="px-4 py-4 space-y-4 flex flex-col">
-            <a href="/#products" className="font-safetyMono font-bold text-white hover:text-safety-orange block px-3 py-2 uppercase">{t('nav.products')}</a>
-            <a href="/#features" className="font-safetyMono font-bold text-white hover:text-safety-orange block px-3 py-2 uppercase">{t('nav.services')}</a>
-            <button onClick={toggleLanguage} className="font-safetyMono font-bold text-white hover:text-safety-orange flex items-center gap-2 px-3 py-2 uppercase w-full cursor-pointer text-left">
-              <Globe className="w-4 h-4" /> {t('nav.language')}
-            </button>
-            <button onClick={toggleCart} className="w-full mt-4 bg-safety-orange text-white font-safetyDisplay font-bold px-6 py-3 uppercase tracking-widest cursor-pointer rounded">
-              {t('nav.getQuote')}
-            </button>
+        <div className="absolute top-full left-0 w-full bg-white border-t border-gray-100 lg:hidden shadow-lg font-archivo">
+          <div className="px-6 py-4 space-y-4 flex flex-col text-gray-900 font-bold uppercase tracking-wider text-sm">
+            <a href="/" className="hover:text-[#FF8C00] block py-2">{t('nav.home') || 'HOME'}</a>
+            <a href="/#products" className="hover:text-[#FF8C00] block py-2">{t('nav.products') || 'SHOP'}</a>
+            <a href="/#features" className="hover:text-[#FF8C00] block py-2">{t('nav.services') || 'SERVICES'}</a>
+            <div className="relative mt-4 font-publicSans">
+              <input type="text" placeholder="What you looking for?" className="bg-gray-50 border border-gray-200 text-sm py-3 px-5 pr-12 w-full focus:ring-1 focus:ring-[#FF8C00] focus:border-[#FF8C00] outline-none rounded-sm transition-all" />
+              <Search className="absolute right-4 top-3.5 text-gray-400 w-5 h-5" />
+            </div>
           </div>
         </div>
       )}
-    </motion.header>
+    </header>
   );
 }

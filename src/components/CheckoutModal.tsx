@@ -77,7 +77,7 @@ export default function CheckoutModal() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-xl bg-safety-dark border border-safety-orange/30 rounded-2xl shadow-2xl overflow-hidden p-4 md:p-8 max-h-[90vh] overflow-y-auto custom-scrollbar"
+            className="relative w-full max-w-xl bg-safety-dark border border-safety-red/30 rounded-2xl shadow-2xl overflow-hidden p-4 md:p-8 max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
             {isSuccess ? (
               <div className="py-12 flex flex-col items-center text-center">
@@ -110,40 +110,40 @@ export default function CheckoutModal() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">{t('checkout.fullName')}</label>
-                      <input required name="fullName" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors" />
+                      <input required name="fullName" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-red transition-colors" />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">{t('checkout.company')}</label>
-                      <input required name="company" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors" />
+                      <input required name="company" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-red transition-colors" />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">{t('checkout.phone')}</label>
-                      <input required name="phone" type="tel" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors text-left" dir="ltr" />
+                      <input required name="phone" type="tel" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-red transition-colors text-left" dir="ltr" />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">{t('checkout.email')}</label>
-                      <input required name="email" type="email" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors text-left" dir="ltr" />
+                      <input required name="email" type="email" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-red transition-colors text-left" dir="ltr" />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">{t('checkout.country')}</label>
-                      <input required name="country" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors" />
+                      <input required name="country" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-red transition-colors" />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">{t('checkout.address')}</label>
-                      <input required name="address" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-orange transition-colors" />
+                      <input required name="address" type="text" className="w-full bg-black border border-safety-gray/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-safety-red transition-colors" />
                     </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">Upload Design (Optional)</label>
-                      <input type="file" accept="image/*,.pdf,.doc,.docx" onChange={(e) => handleFileUpload(e, setUploadedDesign)} className="w-full bg-black border border-safety-gray/50 rounded-lg p-2 text-white text-sm file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-safety-orange file:text-safety-dark hover:file:bg-yellow-500 cursor-pointer" />
+                      <input type="file" accept="image/*,.pdf,.doc,.docx" onChange={(e) => handleFileUpload(e, setUploadedDesign)} className="w-full bg-black border border-safety-gray/50 rounded-lg p-2 text-white text-sm file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-safety-red file:text-safety-dark hover:file:bg-yellow-500 cursor-pointer" />
                       {uploadedDesign && <p className="text-xs text-green-500 mt-1 font-safetyMono">✓ Design attached</p>}
                     </div>
 
                     <div className="space-y-2">
                       <label className="block text-xs font-safetyMono text-safety-light/70 uppercase tracking-wider">Upload Logo (Optional)</label>
-                      <input type="file" accept="image/*,.pdf,.eps,.ai" onChange={(e) => handleFileUpload(e, setUploadedLogo)} className="w-full bg-black border border-safety-gray/50 rounded-lg p-2 text-white text-sm file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-safety-orange file:text-safety-dark hover:file:bg-yellow-500 cursor-pointer" />
+                      <input type="file" accept="image/*,.pdf,.eps,.ai" onChange={(e) => handleFileUpload(e, setUploadedLogo)} className="w-full bg-black border border-safety-gray/50 rounded-lg p-2 text-white text-sm file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-safety-red file:text-safety-dark hover:file:bg-yellow-500 cursor-pointer" />
                       {uploadedLogo && <p className="text-xs text-green-500 mt-1 font-safetyMono">✓ Logo attached</p>}
                     </div>
                   </div>
@@ -154,7 +154,7 @@ export default function CheckoutModal() {
                     </button>
                     <button 
                       type="submit" 
-                      className="px-8 py-3 bg-safety-orange text-safety-dark font-bold uppercase tracking-widest text-sm rounded hover:bg-yellow-500 transition-colors cursor-pointer"
+                      className="px-8 py-3 bg-safety-red text-safety-dark font-bold uppercase tracking-widest text-sm rounded hover:bg-yellow-500 transition-colors cursor-pointer"
                     >
                       {t('checkout.submit')}
                     </button>

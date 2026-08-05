@@ -33,20 +33,24 @@ export default function ProcessSteps() {
   ];
 
   return (
-    <section id="process" className="py-20 bg-safety-dark border-y border-safety-gray/30">
-      <div className="container mx-auto px-6">
+    <section id="process" className="py-20 bg-transparent border-y border-safety-red/30 relative overflow-hidden scanline">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(255,0,51,0.05)_0%,_transparent_70%)] pointer-events-none" />
+      <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16 relative z-10">
           <motion.h2 
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-safetyDisplay text-4xl md:text-5xl text-white uppercase"
+            className="font-safetyDisplay text-4xl md:text-5xl text-white uppercase drop-shadow-[0_0_10px_rgba(255,0,51,0.5)] fade-in"
           >
             {t('process.title')}
           </motion.h2>
         </div>
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-safety-gray/50">
+        {/* Connecting Data Line */}
+        <div className="hidden lg:block absolute top-[60%] left-0 w-full h-px bg-safety-red/30 shadow-[0_0_10px_rgba(255,0,51,0.5)] z-0" />
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-safety-red/20 relative z-10">
           {STEPS.map((step, i) => {
             const Icon = step.icon;
             return (
@@ -58,11 +62,12 @@ export default function ProcessSteps() {
                 transition={{ duration: 0.5, delay: i * 0.15 }}
                 className={`flex flex-col items-center text-center px-4 group ${i !== 0 ? 'pt-8 sm:pt-0' : ''}`}
               >
-                <div className="w-16 h-16 rounded-full bg-safety-panel border border-safety-gray/50 flex items-center justify-center mb-6 text-safety-orange transition-colors group-hover:bg-safety-orange group-hover:text-safety-dark shadow-[0_0_15px_rgba(0,0,0,0.3)]">
-                  <Icon className="w-8 h-8" />
+                <div className="w-16 h-16 rounded-sm bg-black border border-safety-red/30 flex items-center justify-center mb-6 text-safety-red transition-all duration-300 group-hover:bg-safety-red group-hover:text-black group-hover:shadow-[0_0_20px_rgba(255,0,51,0.8)] group-hover:scale-110 relative overflow-hidden">
+                  <div className="absolute inset-0 scanline opacity-30 mix-blend-overlay pointer-events-none" />
+                  <Icon className="w-8 h-8 relative z-10" />
                 </div>
-                <h3 className="font-safetyDisplay text-2xl uppercase text-white mb-3">{step.title}</h3>
-                <p className="font-safetySans text-safety-light/70 text-sm leading-relaxed max-w-[200px]">
+                <h3 className="font-safetyDisplay text-2xl uppercase text-white mb-3 group-hover:text-safety-red transition-colors">{step.title}</h3>
+                <p className="font-safetySans text-safety-light/60 text-sm leading-relaxed max-w-[200px]">
                   {step.desc}
                 </p>
               </motion.div>

@@ -1,16 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useAnalyticsStore } from "./store/useAnalyticsStore";
-import SafetyNavbar from "./components/SafetyNavbar";
-import SafetyHero from "./components/SafetyHero";
-import LogoMarquee from "./components/LogoMarquee";
-import HazardDivider from "./components/HazardDivider";
-import ProductGrid from "./components/ProductGrid";
-import StandardLabels from "./components/StandardLabels";
-import FeaturesStrip from "./components/FeaturesStrip";
-import ProcessSteps from "./components/ProcessSteps";
-import CtaBand from "./components/CtaBand";
-import SafetyFooter from "./components/SafetyFooter";
 import CartDrawer from "./components/CartDrawer";
 import CheckoutModal from "./components/CheckoutModal";
 import { Toaster } from "sonner";
@@ -20,6 +10,7 @@ import OrdersPage from "./pages/OrdersPage";
 import ProductsPage from "./pages/ProductsPage";
 import SettingsPage from "./pages/SettingsPage";
 import MaintenancePage from "./pages/MaintenancePage";
+import HomePage from "./pages/HomePage";
 
 import { useAdminStore } from "./store/useAdminStore";
 
@@ -55,23 +46,11 @@ function MainApp() {
     }
   }, [settings?.storeName]);
   return (
-    <div className="bg-safety-dark min-h-screen text-safety-light selection:bg-safety-orange selection:text-white">
-      <Toaster position="bottom-center" theme="dark" toastOptions={{ style: { background: '#111', border: '1px solid #FF5A00', color: '#fff' } }} />
+    <div className="bg-white text-gray-900 min-h-screen relative font-publicSans selection:bg-[#FF8C00] selection:text-black">
+      <Toaster position="bottom-center" theme="dark" toastOptions={{ style: { background: '#111', border: '1px solid #FF8C00', color: '#fff' } }} />
       <CartDrawer />
       <CheckoutModal />
-      <SafetyNavbar />
-      <main>
-        <SafetyHero />
-        <LogoMarquee />
-        <HazardDivider />
-        <ProductGrid />
-        <StandardLabels />
-        <FeaturesStrip />
-        <HazardDivider />
-        <ProcessSteps />
-        <CtaBand />
-      </main>
-      <SafetyFooter />
+      <HomePage />
     </div>
   );
 }

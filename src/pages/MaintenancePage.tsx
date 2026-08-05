@@ -13,11 +13,11 @@ export default function MaintenancePage() {
         }}
       />
       
-      <div className="z-10 bg-black/80 backdrop-blur-md p-10 md:p-16 rounded-3xl border-2 border-safety-orange text-center max-w-2xl w-full shadow-2xl">
+      <div className="z-10 bg-black/80 backdrop-blur-md p-10 md:p-16 rounded-3xl border-2 border-safety-red text-center max-w-2xl w-full shadow-2xl">
         <div className="flex justify-center mb-6 relative">
-          <div className="absolute animate-ping opacity-20 bg-safety-orange w-24 h-24 rounded-full"></div>
-          <div className="bg-safety-orange/20 p-6 rounded-full relative z-10 border border-safety-orange/50">
-            <ShieldAlert className="w-16 h-16 text-safety-orange animate-pulse" />
+          <div className="absolute animate-ping opacity-20 bg-safety-red w-24 h-24 rounded-full"></div>
+          <div className="bg-safety-red/20 p-6 rounded-full relative z-10 border border-safety-red/50">
+            <ShieldAlert className="w-16 h-16 text-safety-red animate-pulse" />
           </div>
         </div>
         
@@ -25,7 +25,7 @@ export default function MaintenancePage() {
           {settings?.storeName || 'Georeo'}
         </h1>
         
-        <div className="inline-block bg-safety-orange text-black px-6 py-2 font-bold font-safetyMono text-lg uppercase rounded-md mb-8 tracking-widest rotate-[-2deg] shadow-lg">
+        <div className="inline-block bg-safety-red text-black px-6 py-2 font-bold font-safetyMono text-lg uppercase rounded-md mb-8 tracking-widest rotate-[-2deg] shadow-lg">
           Coming Soon
         </div>
         

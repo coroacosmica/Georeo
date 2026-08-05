@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { CartItem } from './useCartStore';
 import { ALL_LABELS } from '../data/labels';
+import { CATALOG_PRODUCTS } from '../data/pdf_catalog';
 import { supabase } from '../lib/supabase';
 
 export interface OrderCustomer {
@@ -31,6 +32,8 @@ export interface AdminProduct {
   url: string;
   type?: string;
   fileType?: 'image' | '3d';
+  category?: string;
+  description?: string;
 }
 
 export interface AdminSettings {
@@ -61,6 +64,19 @@ interface AdminStore {
   settings: AdminSettings;
   updateSettings: (newSettings: Partial<AdminSettings>) => void;
 }
+
+// Initial combined products from labels and new catalog
+const INITIAL_PRODUCTS = [
+  ...CATALOG_PRODUCTS,
+  ...ALL_LABELS.map(label => ({
+    id: `std-${label.id}`,
+    name: label.name,
+    price: 50,
+    url: label.url,
+    type: 'label',
+    category: 'Safety Labels'
+  }))
+];
 
 export const useAdminStore = create<AdminStore>()(
   persist(
@@ -129,20 +145,14 @@ export const useAdminStore = create<AdminStore>()(
         }));
       },
 
-      products: ALL_LABELS.map(label => ({
-        id: `std-${label.id}`,
-        name: label.name,
-        price: 50,
-        url: label.url,
-        type: 'label'
-      })),
+      products: INITIAL_PRODUCTS,
 
       fetchProducts: async () => {
         if (supabase) {
           try {
             const { data, error } = await supabase.from('products').select('*');
             if (!error) {
-              set({ products: data || [] });
+              set({ products: data && data.length > 0 ? data : INITIAL_PRODUCTS });
             }
           } catch (e) {
             console.error('Failed to fetch products from Supabase', e);
@@ -219,30 +229,11 @@ export const useAdminStore = create<AdminStore>()(
     }),
     {
       name: 'georeo-admin-storage',
-      version: 2,
+      version: 4,
       migrate: (persistedState: any, version: number) => {
-        if (version < 2) {
-          // Fix duplicate IDs and duplicate URLs
-          const seenIds = new Set();
-          const seenUrls = new Set();
-          
-          if (persistedState.products) {
-            // First, filter out duplicate URLs (keep only the first one)
-            const uniqueProducts = persistedState.products.filter((p: any) => {
-              if (seenUrls.has(p.url)) return false;
-              seenUrls.add(p.url);
-              return true;
-            });
-
-            // Then, ensure all IDs are unique
-            persistedState.products = uniqueProducts.map((p: any) => {
-              if (seenIds.has(p.id)) {
-                return { ...p, id: `${p.id}-${Math.random().toString(36).substr(2, 9)}` };
-              }
-              seenIds.add(p.id);
-              return p;
-            });
-          }
+        if (version < 4) {
+          // Version 4 introduces individual extracted catalog products and overrides the product list.
+          persistedState.products = INITIAL_PRODUCTS;
         }
         return persistedState;
       }

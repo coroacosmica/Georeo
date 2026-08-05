@@ -1,17 +1,18 @@
 import { motion } from "framer-motion";
 import { useTranslation } from '../lib/i18n/translations';
+import { MetalButton } from './ui/button';
 
 export default function CtaBand() {
   const { t } = useTranslation();
   return (
-    <section className="relative py-24 bg-safety-orange overflow-hidden">
-      {/* Hazard stripe background texture */}
+    <section className="relative py-24 bg-black border-y border-safety-red/40 overflow-hidden scanline">
       <div 
-        className="absolute inset-0 opacity-20 pointer-events-none mix-blend-multiply"
+        className="absolute inset-0 opacity-10 pointer-events-none mix-blend-screen"
         style={{
-          backgroundImage: "repeating-linear-gradient(45deg, transparent 0, transparent 20px, #000 20px, #000 40px)",
+          backgroundImage: "repeating-linear-gradient(90deg, #FF0033 0, #FF0033 2px, transparent 2px, transparent 100px)",
         }}
       />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,0,51,0.15)_0%,_transparent_70%)] pointer-events-none" />
       
       <div className="container mx-auto px-6 relative z-10 text-center">
         <motion.div
@@ -19,17 +20,30 @@ export default function CtaBand() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="max-w-3xl mx-auto"
+          className="max-w-3xl mx-auto border-2 border-safety-red/30 p-12 bg-safety-dark/80 backdrop-blur-md relative"
         >
-          <h2 className="font-safetyDisplay text-5xl md:text-7xl text-safety-dark uppercase mb-6 leading-tight whitespace-pre-line">
+          {/* HUD Accents */}
+          <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-safety-red" />
+          <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-safety-red" />
+          <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-safety-red" />
+          <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-safety-red" />
+          
+          <p className="font-safetyMono text-safety-red text-sm tracking-widest uppercase mb-4 animate-pulse">
+            [ SYSTEM_READY_FOR_INPUT ]
+          </p>
+
+          <h2 className="font-safetyDisplay text-5xl md:text-6xl text-white uppercase mb-6 leading-tight whitespace-pre-line drop-shadow-[0_0_10px_rgba(255,0,51,0.5)]">
             {t('cta.title')}
           </h2>
-          <p className="font-safetySans text-safety-dark/80 text-lg md:text-xl font-medium mb-10 max-w-xl mx-auto">
+          <p className="font-safetyMono text-safety-light/60 text-sm md:text-base font-medium mb-10 max-w-xl mx-auto">
             {t('cta.desc')}
           </p>
-          <a href="mailto:sales@georeo.com" className="inline-block px-10 py-5 bg-safety-dark text-white font-bold hover:bg-black transition-colors uppercase tracking-widest text-sm shadow-xl shadow-safety-dark/20 hover:scale-105 transform duration-300">
+          <MetalButton 
+            variant="error"
+            onClick={() => window.location.href = "mailto:sales@georeo.com"}
+          >
             {t('cta.btn')}
-          </a>
+          </MetalButton>
         </motion.div>
       </div>
     </section>
